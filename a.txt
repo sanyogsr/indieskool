@@ -1,0 +1,21 @@
+.git
+.next
+app
+components
+hooks
+lib
+node_modules       
+prisma
+styles
+utils
+.env
+.eslintrc.json     
+.gitignore
+components.json     
+next-env.d.ts       
+next.config.mjs     
+package-lock.json   
+package.json        
+ postcss.config.mjs  
+README.md
+ tailw.config.ts

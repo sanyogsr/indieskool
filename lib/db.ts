@@ -4,11 +4,11 @@ const prismaClientSingleTon = () => {
   return new PrismaClient();
 };
 
-declare global {
-  var prisma: undefined | ReturnType<typeof prismaClientSingleTon>;
-}
-
+// Initialize the Prisma client, using 'const'
 const prisma = globalThis.prisma ?? prismaClientSingleTon();
 export default prisma;
 
-if (process.env.NODE_ENV !== "production") globalThis.prisma = prisma;
+// Assign the prisma client to the global variable in development mode
+if (process.env.NODE_ENV !== "production") {
+  globalThis.prisma = prisma;
+}
