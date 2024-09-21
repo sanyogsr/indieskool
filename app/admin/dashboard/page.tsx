@@ -69,6 +69,7 @@ export default function AdminDashboard() {
   const [userLoading, setUserLoading] = useState(true); // Still loading until we fetch user data
   const router = useRouter();
   const { isLoggedIn, loading, session } = useCustomSession();
+  // eslint-disable-next-line
   const [userData, setUserData] = useState<UserData | null>(null);
   const [isDataFetched, setIsDataFetched] = useState(false);
   useEffect(() => {
