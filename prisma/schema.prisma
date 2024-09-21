@@ -45,11 +45,42 @@ model User {
   name          String?
   email         String?   @unique
   emailVerified DateTime?
+  role          Role      @default(USER)
   image         String?
   accounts      Account[]
   sessions      Session[]
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+  Course        Course[]
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model Course {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  resources   String?
+  userId      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  videos Video[]
+}
+
+model Video {
+  id        String   @id @default(cuid())
+  title     String
+  videoUrl  String
+  courseId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
 }
 
 model VerificationToken {
