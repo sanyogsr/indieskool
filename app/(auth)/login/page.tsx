@@ -18,7 +18,7 @@ export default function Login() {
       setLoading(true);
       const signInResult = await signIn("email", {
         email: email,
-        callbackUrl: `${window.location.origin}/login`,
+        callbackUrl: `${window.location.origin}/role`,
         redirect: false,
       });
       if (!signInResult) {

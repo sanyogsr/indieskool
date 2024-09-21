@@ -1,7 +1,7 @@
 "use client";
 import { useCustomSession } from "@/hooks/session";
 
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import apj from "../../../public/images/apjsir.jpg";
 import {
   AlignJustify,
@@ -50,6 +50,12 @@ const sidebarItems = [
     link: "/dashboard",
   },
 ];
+type UserData = {
+  id: string;
+  role: string | null;
+  name: string | null;
+  email: string;
+};
 interface Course {
   image: number;
   name: string;
@@ -60,6 +66,11 @@ const courses: Course[] = [];
 export default function AdminDashboard() {
   const [isOpen, setIsOpen] = useState(false);
   const [isCoursePurchased, SetIsCoursePurchased] = useState(false);
+  const [userLoading, setUserLoading] = useState(true); // Still loading until we fetch user data
+  const router = useRouter();
+  const { isLoggedIn, loading, session } = useCustomSession();
+  const [userData, setUserData] = useState<UserData | null>(null);
+  const [isDataFetched, setIsDataFetched] = useState(false);
   useEffect(() => {
     if (courses.length === 0) {
       SetIsCoursePurchased(false);
@@ -68,16 +79,57 @@ export default function AdminDashboard() {
     }
     return;
   }, [courses]);
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (isLoggedIn && session) {
+        try {
+          const res = await fetch("/api/user", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          });
+
+          if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+          }
+
+          const data = await res.json();
+          setUserData(data.user);
+
+          // Check user role and redirect accordingly
+          if (data.user.role === "USER") {
+            router.push("/dashboard");
+          } else if (data.user.role === "ADMIN") {
+            router.push("/admin/dashboard");
+          } else {
+            // If role is not assigned, allow role selection
+            setUserLoading(false);
+          }
+        } catch (error) {
+          console.error("Failed to fetch user data", error);
+        } finally {
+          setIsDataFetched(true); // Mark data fetch as complete
+        }
+      }
+    };
+
+    if (isLoggedIn && session) {
+      fetchUserData();
+    } else {
+      setIsDataFetched(true); // Session is not available or user is not logged in
+    }
+  }, [isLoggedIn, session, router]);
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
   const closeSidebar = () => {
     setIsOpen(false);
   };
-  const { isLoggedIn, loading } = useCustomSession();
-  if (loading) {
+
+  if (loading || userLoading || !isDataFetched) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
+      <div className="flex justify-center items-center h-screen">
         <Loading />
       </div>
     );
