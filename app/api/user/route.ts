@@ -5,17 +5,10 @@ import prisma from "@/lib/db";
 
 export async function GET() {
   const session = await getServerSession(authOptions);
-  // console.log(session?.user?.email);
 
   if (!session || !session.user || !session.user.email) {
-    return NextResponse.json(
-      {
-        error: "Unauthorized",
-      },
-      { status: 401 }
-    );
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  // console.log(session?.user?.email);
 
   try {
     const user = await prisma.user.findUnique({
@@ -24,21 +17,11 @@ export async function GET() {
     });
 
     if (!user) {
-      return NextResponse.json(
-        {
-          error: "User not found",
-        },
-        {
-          status: 404,
-        }
-      );
+      return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
     return NextResponse.json({ user });
   } catch (error) {
-    return NextResponse.json(
-      { error: "Failed to fetch user data" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to fetch user data" }, { status: 500 });
   }
 }

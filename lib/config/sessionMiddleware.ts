@@ -19,3 +19,15 @@ export const Session = async (req: NextRequest) => {
   const user = data.user;
   return user;
 };
+
+export const sessionOfUser = async (req:NextRequest) => {
+  const cookies = req.headers.get("cookie");
+
+  const requestForNextAuth = {
+    headers: {
+      cookie: cookies || "",
+    },
+  };
+  const session = await getSession({ req: requestForNextAuth as any });
+  return session
+};
