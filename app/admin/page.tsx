@@ -17,11 +17,11 @@ import {
 } from "lucide-react";
 
 const sidebarItems = [
-  { icon: LayoutDashboard, name: "Dashboard", link: "/dashboard" },
-  { icon: Search, name: "Your Courses", link: "/search" },
-  { icon: NotebookText, name: "Earnings", link: "/courses" },
-  { icon: User, name: "Profile", link: "/profile" },
-  { icon: LogOut, name: "Logout", link: "/logout" },
+  { icon: LayoutDashboard, name: "Dashboard", link: "/admin" },
+  { icon: Search, name: "Your Courses", link: "/admin/search" },
+  { icon: NotebookText, name: "Earnings", link: "/admin/courses" },
+  { icon: User, name: "Profile", link: "/admin/profile" },
+  // { icon: LogOut, name: "Logout", link: "logout" },
 ];
 
 interface UserData {
