@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import { signOut } from "next-auth/react";
 
 export default function LogoHeader() {
   const [isOpenModal, setIsOpenModal] = useState(false);
@@ -9,7 +10,7 @@ export default function LogoHeader() {
   };
 
   const handleLogout = () => {
-    console.log("User logged out");
+    signOut();
     setIsOpenModal(false);
   };
 

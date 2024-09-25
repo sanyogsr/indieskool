@@ -16,12 +16,11 @@ const Role = () => {
   const [role, setRole] = useState("");
   const router = useRouter();
   const { isLoggedIn, loading, session } = useCustomSession();
-  const [userLoading, setUserLoading] = useState(true); // Still loading until we fetch user data
+  const [userLoading, setUserLoading] = useState(false); // Still loading until we fetch user data
 
   const [userData, setUserData] = useState<UserData | null>(null);
   const [isDataFetched, setIsDataFetched] = useState(false); // New flag to track when data is fetched
 
-  // Fetch user data and check role
   useEffect(() => {
     const fetchUserData = async () => {
       if (isLoggedIn && session) {
@@ -92,7 +91,7 @@ const Role = () => {
   };
 
   // Show loading state until both session and user data are fetched
-  if (loading || userLoading || !isDataFetched) {
+  if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
         <Loading />

@@ -2,11 +2,12 @@
 import { useCustomSession } from "@/hooks/session";
 import { redirect } from "next/navigation";
 import apj from "../../../public/images/apjsir.jpg";
-import { ArrowBigRight, Plus } from "lucide-react";
+import { ArrowBigRight, Divide, Plus } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import LogoHeader from "@/components/LogoHeader";
+import Loading from "@/components/Loading";
 
 interface courseCard {
   name: string;
@@ -52,7 +53,7 @@ const courses = [
 
 export default function Dashboard() {
   const [isCoursePurchased, SetIsCoursePurchased] = useState(false);
-  const { isLoggedIn } = useCustomSession();
+  const { loading } = useCustomSession();
 
   useEffect(() => {
     if (courses.length === 0) {
@@ -63,33 +64,37 @@ export default function Dashboard() {
     return;
   }, []);
 
-  if (isLoggedIn) {
+  if (loading) {
     return (
-      <>
-        <div className=" p-4 sm:ml-64 bg-[#212121] h-full">
-          <LogoHeader />
-          <div className="flex w-full  ">
-            {isCoursePurchased ? (
-              <div className="flex flex-wrap ">
-                {courses.map((course, index) => (
-                  <div
-                    key={index}
-                    className="w-full sm:w-1/1 md:w-1/2 lg:w-1/3 p-2 overflow-hidden"
-                  >
-                    <CourseCard name={course.name} />
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <LargeCard />
-            )}
-          </div>
-        </div>
-      </>
+      <div className="flex justify-center items-center h-screen">
+        <Loading />
+      </div>
     );
-  } else {
-    redirect("/");
   }
+
+  return (
+    <>
+      <div className=" p-4 sm:ml-64 bg-[#212121] h-full">
+        <LogoHeader />
+        <div className="flex w-full  ">
+          {isCoursePurchased ? (
+            <div className="flex flex-wrap ">
+              {courses.map((course, index) => (
+                <div
+                  key={index}
+                  className="w-full sm:w-1/1 md:w-1/2 lg:w-1/3 p-2 overflow-hidden"
+                >
+                  <CourseCard name={course.name} />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <LargeCard />
+          )}
+        </div>
+      </div>
+    </>
+  );
 }
 const LargeCard = () => (
   <div className="flex  items-center justify-center h-48 max-w-screen m-4 rounded cursor-pointer bg-gray-400 ">

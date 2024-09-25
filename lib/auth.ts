@@ -7,6 +7,7 @@ import { AdapterUser } from "next-auth/adapters";
 
 export const authOptions: NextAuthOptions = {
   secret: process.env.NEXTAUTH_SECRET,
+  // debug: true,
   adapter: {
     ...PrismaAdapter(prisma),
     createUser: async (data: Omit<AdapterUser, "id"> & { role?: string }) => {
@@ -30,6 +31,7 @@ export const authOptions: NextAuthOptions = {
       } as AdapterUser;
     },
   },
+
   providers: [
     EmailProvider({
       server: {

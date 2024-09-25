@@ -5,6 +5,7 @@ import prisma from "@/lib/db";
 
 export async function GET() {
   const session = await getServerSession(authOptions);
+  // console.log(session?.user?.email);
 
   if (!session || !session.user || !session.user.email) {
     return NextResponse.json(
@@ -14,6 +15,7 @@ export async function GET() {
       { status: 401 }
     );
   }
+  // console.log(session?.user?.email);
 
   try {
     const user = await prisma.user.findUnique({

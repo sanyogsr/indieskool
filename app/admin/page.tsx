@@ -1,11 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
-import { redirect, useRouter } from "next/navigation";
 import { useCustomSession } from "@/hooks/session";
 import Loading from "@/components/Loading";
 import Link from "next/link";
 import Image from "next/image";
-import apj from "../../../public/images/apjsir.jpg";
+import apj from "../../public/images/apjsir.jpg";
 import {
   AlignJustify,
   ArrowBigRight,
@@ -43,12 +42,8 @@ const courses: Course[] = [];
 export default function AdminDashboard() {
   const [isOpen, setIsOpen] = useState(false);
   const [isCoursePurchased, SetIsCoursePurchased] = useState(false);
-  const [userLoading, setUserLoading] = useState(true);
-  const [isDataFetched, setIsDataFetched] = useState(false);
-  const [userData, setUserData] = useState<UserData | null>(null);
 
-  const router = useRouter();
-  const { isLoggedIn, loading, session } = useCustomSession();
+  const { loading } = useCustomSession();
 
   useEffect(() => {
     if (courses.length === 0) {
@@ -56,55 +51,17 @@ export default function AdminDashboard() {
     } else {
       SetIsCoursePurchased(true);
     }
-  }, [courses]);
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const res = await fetch("/api/user", { method: "GET" });
-        if (!res.ok) throw new Error("Failed to fetch user data");
-
-        const data = await res.json();
-        setUserData(data.user);
-
-        // Redirect based on user role
-        if (data.user.role === "USER") {
-          router.push("/dashboard");
-        } else if (data.user.role === "ADMIN") {
-          router.push("/admin/dashboard");
-        } else {
-          setUserLoading(false);
-        }
-      } catch (error) {
-        console.error("Failed to fetch user data", error);
-      } finally {
-        setIsDataFetched(true);
-        setUserLoading(false); // Mark user loading as false here
-      }
-    };
-
-    if (isLoggedIn && session) {
-      fetchUserData();
-    } else {
-      setIsDataFetched(true);
-      setUserLoading(false); // Ensure userLoading is set to false here
-    }
-  }, [isLoggedIn, session, router]);
+  }, []);
 
   const toggleSidebar = () => setIsOpen(!isOpen);
   const closeSidebar = () => setIsOpen(false);
 
-  if (loading || userLoading || !isDataFetched) {
+  if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
         <Loading />
       </div>
     );
-  }
-
-  if (!isLoggedIn) {
-    redirect("/login");
-    return null;
   }
 
   return (
