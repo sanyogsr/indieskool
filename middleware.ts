@@ -65,7 +65,10 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
   matcher: ["/", "/dashboard", "/admin", "/role", "/login", "/login"],
-  runtime: "nodejs",
+  unstable_allowDynamic: [
+    "/lib/utilities.js", // allows a single file
+    "/node_modules/function-bind/**", // use a glob to allow anything in the function-bind 3rd party module
+  ],
 };
 // import { NextResponse } from "next/server";
 // import type { NextRequest } from "next/server";
