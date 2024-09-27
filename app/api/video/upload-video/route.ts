@@ -128,6 +128,8 @@ const s3 = new S3Client({
 
 export async function POST(req: NextRequest) {
   try {
+    console.log("Bucket Name:", process.env.AWS_S3_BUCKET_NAME);
+    console.log("AWS Region:", process.env.AWS_REGION);
     const formData = await req.formData();
     const title = formData.get("title")?.toString();
     const description = formData.get("description")?.toString();
