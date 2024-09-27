@@ -1,16 +1,15 @@
 "use client";
 
-import { Delete, RemoveFormattingIcon, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useCustomSession } from "@/hooks/session";
-import Loading from "@/components/Loading";
 import EnhancedProgressBar from "@/components/EnhancedProgressBar";
 interface Link {
   title: string;
   url: string;
 }
-function page() {
+function Page() {
   const [links, setLinks] = useState<Link[]>([{ title: "", url: "" }]);
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [title, setTitle] = useState("");
@@ -262,5 +261,5 @@ function page() {
   );
 }
 
-export default page;
+export default Page;
 // Lorem ipsum dolor sit amet consectetur adipisicing elit. Architecto, autem necessitatibus. Earum eum quia saepe magni excepturi veniam doloribus nemo, ipsum accusantium. Expedita facere deleniti quasi dolorum! Repellendus quisquam modi exercitationem corrupti voluptatibus ea cumque obcaecati facilis iure esse praesentium tenetur vel itaque, dignissimos officiis eligendi sapiente deleniti labore? Aliquid eum pariatur impedit fuga. Cupiditate doloremque porro libero, non sint quibusdam consectetur illum asperiores temporibus tenetur. Voluptatibus sed aspernatur optio totam commodi nesciunt reprehenderit itaque! Impedit, corrupti. Recusandae!
