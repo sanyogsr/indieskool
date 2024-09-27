@@ -110,6 +110,8 @@
 //   }
 // }
 import { NextResponse } from "next/server";
+import { IncomingMessage } from "http";
+
 import {
   S3Client,
   CreateMultipartUploadCommand,
@@ -140,6 +142,7 @@ const s3 = new S3Client({
 
 export async function POST(req: Request) {
   try {
+    // @ts-ignore
     await uploadMiddleware(req as any, {} as any);
 
     const body = await req.formData();
@@ -219,7 +222,6 @@ async function streamToBuffer(stream: ReadableStream): Promise<Buffer> {
 
   return Buffer.concat(chunks);
 }
-
 
 async function createMultipartUpload(videoFile: File) {
   const createUploadCommand = new CreateMultipartUploadCommand({
