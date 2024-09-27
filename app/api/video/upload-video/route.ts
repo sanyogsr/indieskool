@@ -142,7 +142,8 @@ const s3 = new S3Client({
 
 export async function POST(req: Request) {
   try {
-    // @ts-expect-error
+    //@ts-expect-error: multer expects IncomingMessage instead of Next.js Request type
+
     await uploadMiddleware(req as any, {} as any);
 
     const body = await req.formData();
