@@ -143,6 +143,7 @@ const s3 = new S3Client({
 export async function POST(req: Request) {
   try {
     //@ts-expect-error: multer expects IncomingMessage instead of Next.js Request type
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 
     await uploadMiddleware(req as any, {} as any);
 
