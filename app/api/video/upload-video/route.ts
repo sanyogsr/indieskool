@@ -110,6 +110,7 @@
 //   }
 // }
 import { NextRequest, NextResponse } from "next/server";
+import prisma from "@/lib/db";
 import {
   S3Client,
   CreateMultipartUploadCommand,
@@ -154,7 +155,7 @@ export async function POST(req: NextRequest) {
 
     const videoUrl = `${process.env.AWS_CLOUDFRONT_URL}/video/${videoFile.name}`;
 
-    const tutorial = await prisma?.tutorial.create({
+    const tutorial = await prisma.tutorial.create({
       data: {
         title: title || "",
         description: description || "",
