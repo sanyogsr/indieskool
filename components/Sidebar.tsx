@@ -2,40 +2,40 @@
 import React, { useState } from "react";
 import {
   AlignJustify,
+  DollarSign,
   LayoutDashboard,
-
   NotebookText,
-  Search,
   User,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-const sidebarItems = [
-  {
-    icon: LayoutDashboard,
-    name: "DashBoard",
-    link: "/dashboard",
-  },
-  {
-    icon: Search,
-    name: "Search Courses",
-    link: "/dashboard/search",
-  },
-  {
-    icon: NotebookText,
-    name: "Your Courses",
-    link: "/dashboard/courses/:id",
-  },
-  {
-    icon: User,
-    name: "Profile",
-    link: "/dashboard/profile",
-  },
-];
 
-function Sidebar() {
+function Sidebar({ admin }: { admin: boolean }) {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
+
+  const sidebarItems = [
+    {
+      icon: LayoutDashboard,
+      name: "DashBoard",
+      link: `${admin ? "/admin" : "/dashboard"}`,
+    },
+    {
+      icon: DollarSign,
+      name: "Revenue",
+      link: `${admin ? "/admin/revenue" : "/dashboard/search"}`,
+    },
+    {
+      icon: NotebookText,
+      name: "Your Courses",
+      link: `${admin ? "/admin/courses/:id" : "/dashboard/courses/:id"}`,
+    },
+    {
+      icon: User,
+      name: "Profile",
+      link: `${admin ? "/admin/profile" : "/dashboard/profile"}`,
+    },
+  ];
   const toggleSidebar = () => {
     setIsOpen(!isOpen);
   };
@@ -59,7 +59,8 @@ function Sidebar() {
           <AlignJustify />
         </button>
         <h1 className="text-3xl font-bold text-white">
-          Indie<span className="text-yellow-500">Skool</span>{" "}
+          Indie<span className="text-yellow-500">Skool</span>
+          {admin ? <span className="text-sm pl-2">Admin</span> : null}
         </h1>
         <div className="mr-2">
           <button

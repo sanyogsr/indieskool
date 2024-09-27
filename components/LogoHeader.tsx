@@ -2,24 +2,27 @@
 import React, { useState } from "react";
 import { signOut } from "next-auth/react";
 
-export default function LogoHeader() {
+export default function LogoHeader({ admin }: { admin: boolean }) {
   const [isOpenModal, setIsOpenModal] = useState(false);
 
   const toggleModal = () => {
     setIsOpenModal(!isOpenModal);
   };
 
-  const handleLogout = () => {
-    signOut();
+  const handleLogout = async () => {
+   
+    await signOut({ callbackUrl: "/" });
+
     setIsOpenModal(false);
   };
 
   return (
-    <div className="relative flex justify-between items-center h-[3rem]  px-4">
+    <div className="relative flex justify-between items-center h-[3rem] px-4">
       {/* Centered Logo */}
       <div className="absolute left-1/2 transform -translate-x-1/2 hidden sm:block">
         <h1 className="text-3xl font-bold text-white">
           Indie<span className="text-yellow-500">Skool</span>{" "}
+          {admin ? <span className="text-sm pl-2">Admin</span> : null}
         </h1>
       </div>
 

@@ -4,16 +4,13 @@ import Toast from "@/components/Toast";
 import { useCustomSession } from "@/hooks/session";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { useState, useEffect } from "react";
 
 export default function Login() {
-  const [email, setEmail] = useState<string>(""); // Avoid null, email will default to an empty string
+  const [email, setEmail] = useState<string>(""); // Avoid null
   const [loading, setLoading] = useState<boolean>(false);
   const [showToast, setShowToast] = useState<boolean>(false);
-  const {  loading:sessionLoading } = useCustomSession();
-
-  
+  const { loading: sessionLoading } = useCustomSession();
 
   async function signInWithEmail(e: React.FormEvent) {
     e.preventDefault(); // Prevent default form submission

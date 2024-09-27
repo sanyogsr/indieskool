@@ -75,7 +75,7 @@ export default function Dashboard() {
   return (
     <>
       <div className=" p-4 sm:ml-64 bg-[#212121] h-full">
-        <LogoHeader />
+        <LogoHeader admin={false} />
         <div className="flex w-full  ">
           {isCoursePurchased ? (
             <div className="flex flex-wrap ">

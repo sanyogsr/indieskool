@@ -5,7 +5,6 @@ import prisma from "@/lib/db";
 
 export async function GET() {
   const session = await getServerSession(authOptions);
-
   if (!session || !session.user || !session.user.email) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
@@ -13,15 +12,17 @@ export async function GET() {
   try {
     const user = await prisma.user.findUnique({
       where: { email: session.user.email },
-      select: { id: true, role: true, name: true },
+      select: { id: true, role: true },
     });
 
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
-
     return NextResponse.json({ user });
   } catch (error) {
-    return NextResponse.json({ error: "Failed to fetch user data" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to fetch user data" },
+      { status: 500 }
+    );
   }
 }
