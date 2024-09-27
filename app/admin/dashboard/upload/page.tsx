@@ -40,7 +40,7 @@ function Page() {
     };
 
     fetchUserData();
-  }, [session, isLoggedIn]); // Add all dependencies
+  }, [session, isLoggedIn,userId]); // Add all dependencies
 
   const handleAddLink = () => {
     setLinks([...links, { title: "", url: "" }]);
