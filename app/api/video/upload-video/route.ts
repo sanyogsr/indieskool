@@ -109,9 +109,7 @@
 //     );
 //   }
 // }
-import { NextResponse } from "next/server";
-import { IncomingMessage } from "http";
-
+import { NextRequest, NextResponse } from "next/server";
 import {
   S3Client,
   CreateMultipartUploadCommand,
@@ -119,12 +117,6 @@ import {
   CompleteMultipartUploadCommand,
   PutObjectCommand,
 } from "@aws-sdk/client-s3";
-import multer from "multer";
-import { promisify } from "util";
-import { Readable } from "stream";
-
-const upload = multer();
-const uploadMiddleware = promisify(upload.single("video"));
 
 const s3 = new S3Client({
   region: process.env.AWS_REGION,
@@ -134,24 +126,13 @@ const s3 = new S3Client({
   },
 });
 
-// export const config = {
-//   api: {
-//     bodyParser: false,
-//   },
-// };
-
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
-    //@ts-expect-error: multer expects IncomingMessage instead of Next.js Request type
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-
-    await uploadMiddleware(req as any, {} as any);
-
-    const body = await req.formData();
-    const title = body.get("title")?.toString();
-    const description = body.get("description")?.toString();
-    const videoFile = body.get("video") as File;
-    const userId = body.get("userId")?.toString();
+    const formData = await req.formData();
+    const title = formData.get("title")?.toString();
+    const description = formData.get("description")?.toString();
+    const videoFile = formData.get("video") as File | null;
+    const userId = formData.get("userId")?.toString();
 
     if (!videoFile) {
       return NextResponse.json(
@@ -177,7 +158,7 @@ export async function POST(req: Request) {
         description: description || "",
         videoUrl: videoUrl,
         links: {
-          create: extractLinks(body),
+          create: extractLinks(formData),
         },
         user: {
           connect: { id: userId },
@@ -198,25 +179,10 @@ export async function POST(req: Request) {
   }
 }
 
-// Helper function to extract links from formData
-function extractLinks(body: FormData): { title: string; url: string }[] {
-  const linksLength = parseInt(body.get("linksLength")?.toString() || "0", 10);
-  const links: { title: string; url: string }[] = [];
-
-  for (let i = 0; i < linksLength; i++) {
-    const linkTitle = body.get(`links[${i}].title`)?.toString();
-    const linkUrl = body.get(`links[${i}].url`)?.toString();
-    if (linkTitle && linkUrl) {
-      links.push({ title: linkTitle, url: linkUrl });
-    }
-  }
-
-  return links;
-}
 async function streamToBuffer(stream: ReadableStream): Promise<Buffer> {
   const reader = stream.getReader();
   const chunks: Uint8Array[] = [];
-  let result;
+  let result: ReadableStreamReadResult<Uint8Array>;
 
   while (!(result = await reader.read()).done) {
     chunks.push(result.value);
@@ -225,7 +191,65 @@ async function streamToBuffer(stream: ReadableStream): Promise<Buffer> {
   return Buffer.concat(chunks);
 }
 
-async function createMultipartUpload(videoFile: File) {
+async function uploadLargeFileToS3(
+  videoStream: ReadableStream,
+  videoFile: File
+) {
+  const partSize = 5 * 1024 * 1024; // 5MB per part
+  const uploadId = await createMultipartUpload(videoFile);
+
+  try {
+    const parts: { PartNumber: number; ETag: string }[] = [];
+    let partNumber = 1;
+    const buffer = await streamToBuffer(videoStream);
+    const totalParts = Math.ceil(buffer.length / partSize);
+
+    for (let i = 0; i < totalParts; i++) {
+      const partBuffer = buffer.slice(i * partSize, (i + 1) * partSize);
+
+      const uploadPartCommand = new UploadPartCommand({
+        Bucket: process.env.AWS_S3_BUCKET_NAME!,
+        Key: `video/${videoFile.name}`,
+        PartNumber: partNumber,
+        UploadId: uploadId,
+        Body: partBuffer,
+      });
+
+      const { ETag } = await s3.send(uploadPartCommand);
+
+      if (ETag) {
+        parts.push({ PartNumber: partNumber, ETag });
+      } else {
+        throw new Error(
+          `Failed to upload part ${partNumber}: ETag is undefined.`
+        );
+      }
+
+      partNumber++;
+    }
+
+    await completeMultipartUpload(uploadId, parts, videoFile);
+  } catch (error) {
+    console.error("Error in multipart upload", error);
+    throw error;
+  }
+}
+
+async function uploadFileToS3(videoStream: ReadableStream, videoFile: File) {
+  const buffer = await streamToBuffer(videoStream);
+
+  const uploadParams = {
+    Bucket: process.env.AWS_S3_BUCKET_NAME!,
+    Key: `video/${videoFile.name}`,
+    Body: buffer,
+    ContentType: videoFile.type,
+  };
+
+  const command = new PutObjectCommand(uploadParams);
+  await s3.send(command);
+}
+
+async function createMultipartUpload(videoFile: File): Promise<string> {
   const createUploadCommand = new CreateMultipartUploadCommand({
     Bucket: process.env.AWS_S3_BUCKET_NAME!,
     Key: `video/${videoFile.name}`,
@@ -233,6 +257,11 @@ async function createMultipartUpload(videoFile: File) {
   });
 
   const { UploadId } = await s3.send(createUploadCommand);
+  if (!UploadId) {
+    throw new Error(
+      "Failed to create multipart upload: UploadId is undefined."
+    );
+  }
   return UploadId;
 }
 
@@ -250,60 +279,21 @@ async function completeMultipartUpload(
 
   await s3.send(completeUploadCommand);
 }
-async function uploadLargeFileToS3(
-  videoStream: ReadableStream,
-  videoFile: File
-) {
-  const partSize = 5 * 1024 * 1024; // 5MB per part
-  const uploadId = await createMultipartUpload(videoFile);
 
-  try {
-    const parts = [];
-    let partNumber = 1;
-    const buffer = await streamToBuffer(videoStream); // Convert stream to Buffer
-    const totalParts = Math.ceil(buffer.length / partSize);
+function extractLinks(formData: FormData): { title: string; url: string }[] {
+  const linksLength = parseInt(
+    formData.get("linksLength")?.toString() || "0",
+    10
+  );
+  const links: { title: string; url: string }[] = [];
 
-    for (let i = 0; i < totalParts; i++) {
-      const partBuffer = buffer.slice(i * partSize, (i + 1) * partSize);
-
-      const uploadPartCommand = new UploadPartCommand({
-        Bucket: process.env.AWS_S3_BUCKET_NAME!,
-        Key: `video/${videoFile.name}`,
-        PartNumber: partNumber,
-        UploadId: uploadId!,
-        Body: partBuffer, // Use the sliced Buffer as the Body
-      });
-
-      const { ETag } = await s3.send(uploadPartCommand);
-
-      if (ETag) {
-        parts.push({ PartNumber: partNumber, ETag });
-      } else {
-        throw new Error(
-          `Failed to upload part ${partNumber}: ETag is undefined.`
-        );
-      }
-
-      partNumber++;
+  for (let i = 0; i < linksLength; i++) {
+    const linkTitle = formData.get(`links[${i}].title`)?.toString();
+    const linkUrl = formData.get(`links[${i}].url`)?.toString();
+    if (linkTitle && linkUrl) {
+      links.push({ title: linkTitle, url: linkUrl });
     }
-
-    await completeMultipartUpload(uploadId!, parts, videoFile);
-  } catch (error) {
-    console.error("Error in multipart upload", error);
-    throw error;
   }
-}
 
-async function uploadFileToS3(videoStream: ReadableStream, videoFile: File) {
-  const buffer = await streamToBuffer(videoStream); // Convert stream to Buffer
-
-  const uploadParams = {
-    Bucket: process.env.AWS_S3_BUCKET_NAME!,
-    Key: `video/${videoFile.name}`,
-    Body: buffer, // Use Buffer as the Body
-    ContentType: videoFile.type,
-  };
-
-  const command = new PutObjectCommand(uploadParams);
-  await s3.send(command);
+  return links;
 }
