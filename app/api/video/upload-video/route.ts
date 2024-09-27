@@ -142,7 +142,7 @@ const s3 = new S3Client({
 
 export async function POST(req: Request) {
   try {
-    // @ts-ignore
+    // @ts-expect-error
     await uploadMiddleware(req as any, {} as any);
 
     const body = await req.formData();
