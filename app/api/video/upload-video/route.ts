@@ -171,9 +171,9 @@ export async function POST(req: NextRequest) {
       { status: 200 }
     );
   } catch (error) {
-    alert(error);
+    // alert(error);
     return NextResponse.json(
-      { error: "Failed to upload video" },
+      { error: "Failed to upload video", err: error },
       { status: 500 }
     );
   }
