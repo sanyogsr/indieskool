@@ -1,7 +1,7 @@
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth/next";
 import { NextResponse } from "next/server";
-
+import prisma from "@/lib/db";
 // get tutorials
 export async function GET() {
   const session = await getServerSession(authOptions);
@@ -11,7 +11,7 @@ export async function GET() {
   }
   try {
     const userEmail = session.user.email;
-    const user = await prisma?.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: {
         email: userEmail,
       },
@@ -21,7 +21,7 @@ export async function GET() {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    const getTut = await prisma?.tutorial.findMany({
+    const getTut = await prisma.tutorial.findMany({
       where: { userId: user.id },
       include: { links: true },
     });
