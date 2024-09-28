@@ -18,7 +18,7 @@ const EnhancedProgressBar = ({
             {isUploading && progress < 100
               ? "Uploading..."
               : progress === 100
-              ? "Complete!"
+              ? "Optimizing..."
               : `${progress}%`}
           </span>
         </div>

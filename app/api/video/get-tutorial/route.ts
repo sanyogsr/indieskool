@@ -23,6 +23,7 @@ export async function GET() {
 
     const getTut = await prisma?.tutorial.findMany({
       where: { userId: user.id },
+      include: { links: true },
     });
     return NextResponse.json(getTut);
     console.log(getTut);

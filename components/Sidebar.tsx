@@ -27,8 +27,8 @@ function Sidebar({ admin }: { admin: boolean }) {
     },
     {
       icon: NotebookText,
-      name: "Your Courses",
-      link: `${admin ? "/admin/courses/:id" : "/dashboard/courses/:id"}`,
+      name: "Your Tutorials",
+      link: `${admin ? "/admin/courses/" : "/dashboard/courses/"}`,
     },
     {
       icon: User,

@@ -12,16 +12,7 @@ import Footer from "./Footer";
 import Loading from "./Loading";
 
 export default function SessionComponent() {
-  const { isLoggedIn, loading } = useCustomSession();
-
-  // Show loading state while the session is being checked
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen ">
-        <Loading />
-      </div>
-    );
-  }
+  const { loading } = useCustomSession();
 
   // If the user is logged in, the middleware will handle the redirect on the server side
   return (
