@@ -3,31 +3,37 @@ import Loading from "@/components/Loading";
 import LogoHeader from "@/components/LogoHeader";
 import { useCustomSession } from "@/hooks/session";
 import { useTutorialStore } from "@/store/tutorialStore";
-import { useUserStore } from "@/store/userStore";
+// import { useUserStore } from "@/store/userStore";
 import React, { useEffect } from "react";
 
+interface tutorial {
+  title: string;
+  description: string;
+  videoUrl: string;
+}
+
 const Page = () => {
-  const { user, fetchUser } = useUserStore();
+  // const { user, fetchUser } = useUserStore();
   const { tutorials, fetchTutorials } = useTutorialStore();
-  const { session, isLoggedIn } = useCustomSession();
+  const { isLoggedIn } = useCustomSession();
 
   // Fetch the user when logged in
-  useEffect(() => {
-    if (!user && isLoggedIn) {
-      fetchUser();
-      console.log(user);
-    }
-  }, [session, isLoggedIn]);
+  // useEffect(() => {
+  //   if (!user && isLoggedIn) {
+  //     fetchUser();
+  //     console.log(user);
+  //   }
+  // }, [session, isLoggedIn]);
 
   // Fetch the tutorials when the user is available and logged in
   useEffect(() => {
-    if (isLoggedIn && user) {
+    if (isLoggedIn) {
       fetchTutorials();
       console.log(tutorials);
     }
-  }, [isLoggedIn, user]);
+  }, [isLoggedIn]);
 
-  if (!user && !tutorials) {
+  if (!tutorials) {
     return (
       <div className="flex justify-center items-center min-h-screen">
         <Loading />
@@ -42,7 +48,7 @@ const Page = () => {
         <h1 className="w-full text-white text-3xl mb-6">My Courses</h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {tutorials && tutorials.length > 0 ? (
-            tutorials.map((tutorial: any, index: number) => (
+            tutorials.map((tutorial: tutorial, index: number) => (
               <div
                 key={index}
                 className="bg-yellow-500 hover:bg-yellow-400 rounded-lg p-6 flex flex-col justify-between shadow-lg transform transition-transform hover:scale-105"

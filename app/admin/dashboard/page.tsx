@@ -6,7 +6,11 @@ import { ArrowRight, Upload } from "lucide-react";
 import LogoHeader from "@/components/LogoHeader";
 import { useTutorialStore } from "@/store/tutorialStore";
 import Loading from "@/components/Loading";
-
+interface tutorial {
+  title: string;
+  description: string;
+  videoUrl: string;
+}
 export default function AdminDashboard() {
   const { tutorials, fetchTutorials } = useTutorialStore();
   const { session, isLoggedIn } = useCustomSession();
@@ -30,7 +34,7 @@ export default function AdminDashboard() {
     <>
       <div className="p-4 sm:ml-64 bg-[#212121] min-h-screen relative">
         <LogoHeader admin={true} />
-        
+
         {/* Upload button in top left corner with spacing */}
         <div className="absolute top-10 left-10 z-10">
           <LargeCard />
@@ -51,7 +55,7 @@ export default function AdminDashboard() {
             >
               {tutorials
                 .slice(0, visibleTutorials)
-                .map((tutorial: any, index: number) => (
+                .map((tutorial: tutorial, index: number) => (
                   <div
                     key={index}
                     className="bg-yellow-500 hover:bg-yellow-400 rounded-lg p-6 flex flex-col justify-between shadow-lg transform transition-transform hover:scale-105"
@@ -63,7 +67,7 @@ export default function AdminDashboard() {
                       {tutorial.description}
                     </p>
                     <a
-                      href={tutorial.links[0]}
+                      href={tutorial.videoUrl}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="bg-white text-yellow-500 font-semibold py-2 px-4 rounded-lg text-center hover:bg-gray-100"
