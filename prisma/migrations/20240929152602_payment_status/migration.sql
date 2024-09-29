@@ -1,0 +1,2 @@
+-- AlterEnum
+ALTER TYPE "PaymentStatus" ADD VALUE 'NO_PAYMENT_REQUIRED';

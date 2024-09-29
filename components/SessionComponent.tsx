@@ -10,6 +10,7 @@ import Indiecard from "./IndieCard";
 import { StarIcon } from "lucide-react";
 import Footer from "./Footer";
 import Loading from "./Loading";
+import FloatingAvatars from "./FloatingAvatars";
 
 export default function SessionComponent() {
   const { loading } = useCustomSession();
@@ -19,7 +20,7 @@ export default function SessionComponent() {
     <div className="flex flex-col min-h-[100dvh] items-center justify-center bg-[#212121]">
       <Navbar />
 
-      <section className="w-full py-12 md:py-24 bg-[#212121] ">
+      <section className="w-full py-12 md:pb-24 md:pt-14 bg-[#212121] ">
         <HeroSection />
       </section>
 
@@ -36,7 +37,7 @@ export default function SessionComponent() {
           <Demo />
         </section>
 
-        <section className="w-full py-10">
+        <section className="w-full py-10 flex justify-center">
           <Testimonial />
         </section>
 
@@ -46,6 +47,7 @@ export default function SessionComponent() {
       </main>
 
       <Footer />
+      <FloatingAvatars />
     </div>
   );
 }

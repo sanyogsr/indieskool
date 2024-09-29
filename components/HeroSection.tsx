@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function HeroSection() {
   return (
-    <div className="px-4 md:px-6 py-5 flex justify-center items-center to-black">
+    <div className="px-4 md:px-6  flex justify-center items-center to-black">
       <div className="flex flex-col justify-center items-center text-center space-y-8 max-w-4xl mx-auto">
         {/* Title Section */}
         <h1 className="text-5xl sm:text-6xl xl:text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500 animate-text">

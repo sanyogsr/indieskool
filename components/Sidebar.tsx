@@ -5,6 +5,7 @@ import {
   DollarSign,
   LayoutDashboard,
   NotebookText,
+  Search,
   User,
 } from "lucide-react";
 import Link from "next/link";
@@ -21,13 +22,13 @@ function Sidebar({ admin }: { admin: boolean }) {
       link: `${admin ? "/admin" : "/dashboard"}`,
     },
     {
-      icon: DollarSign,
-      name: "Revenue",
+      icon: admin ? DollarSign : Search,
+      name: `${admin ? "Revenue" : "Search courses"}`,
       link: `${admin ? "/admin/revenue" : "/dashboard/search"}`,
     },
     {
       icon: NotebookText,
-      name: "Your Tutorials",
+      name: "Your tutorials",
       link: `${admin ? "/admin/courses/" : "/dashboard/courses/"}`,
     },
     {

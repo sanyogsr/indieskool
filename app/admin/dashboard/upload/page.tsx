@@ -19,6 +19,7 @@ function Page() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [userId, setUserId] = useState("");
+  const [price, setPrice] = useState("");
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [showToast, setShowToast] = useState(false); // State to manage toast visibility
@@ -64,6 +65,7 @@ function Page() {
     formData.append("description", description);
     formData.append("video", videoFile);
     formData.append("userId", userId);
+    formData.append("price", price);
     links.forEach((link, index) => {
       formData.append(`links[${index}].title`, link.title);
       formData.append(`links[${index}].url`, link.url);
@@ -178,6 +180,18 @@ function Page() {
           >
             Add Link
           </button>
+        </div>
+        <div className="mb-4 flex flex-col">
+          <label className="mb-3 text-sm font-medium text-white block">
+            Price
+          </label>
+          <input
+            type="number"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            placeholder="Enter price"
+            className="p-2.5 border border-gray-300 rounded-lg bg-gray-50 text-sm text-gray-900 focus:ring-blue-500 focus:border-blue-500 w-full"
+          />
         </div>
         <div className="mb-4 flex flex-col">
           <label className="mb-2 text-sm text-white font-medium">

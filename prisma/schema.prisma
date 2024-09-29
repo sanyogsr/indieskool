@@ -1,8 +1,8 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// // This is your Prisma schema file,
+// // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+// // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
   provider = "prisma-client-js"
@@ -40,19 +40,19 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-model User {
-  id            String     @id @default(cuid())
-  name          String?
-  email         String?    @unique
-  emailVerified DateTime?
-  role          Role?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
-  tutorial      Tutorial[]
-}
+// model User {
+//   id            String     @id @default(cuid())
+//   name          String?
+//   email         String?    @unique
+//   emailVerified DateTime?
+//   role          Role?
+//   image         String?
+//   accounts      Account[]
+//   sessions      Session[]
+//   createdAt     DateTime   @default(now())
+//   updatedAt     DateTime   @updatedAt
+//   tutorial      Tutorial[]
+// }
 
 enum Role {
   USER
@@ -60,15 +60,17 @@ enum Role {
 }
 
 model Tutorial {
-  id          Int      @id @default(autoincrement())
-  title       String
-  videoUrl    String
-  description String
-  links       Link[]
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  userId      String
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id           Int            @id @default(autoincrement())
+  title        String
+  videoUrl     String
+  description  String
+  links        Link[]
+  price        Int
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  userId       String
+  user         User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  UserTutorial UserTutorial[]
 }
 
 model Link {
@@ -85,4 +87,62 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model User {
+  id            String         @id @default(cuid())
+  name          String?
+  email         String?        @unique
+  emailVerified DateTime?
+  role          Role?
+  image         String?
+  stripeAccount StripeAccount? // Only Admin’s Stripe account
+  accounts      Account[]
+  sessions      Session[]
+  payments      Payment[] // Payments made by the user
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  tutorials     Tutorial[]
+  UserTutorial  UserTutorial[]
+}
+
+model StripeAccount {
+  id              String   @id @default(cuid())
+  stripeAccountId String   @unique
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  connected       Boolean  @default(false) // Indicates if the Stripe account is connected
+  createdAt       DateTime @default(now())
+}
+
+model Payment {
+  id              String        @id @default(cuid())
+  stripePaymentId String        @unique
+  userId          String // Refers to the user who made the payment
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount          Int // Payment amount in cents (Stripe uses cents)
+  currency        String        @default("USD")
+  status          PaymentStatus
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  NO_PAYMENT_REQUIRED // Add this line if it doesn't exist
+}
+
+
+model UserTutorial {
+  id          String   @id @default(cuid())
+  userId      String
+  tutorialId  Int
+  purchasedAt DateTime @default(now())
+
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tutorial Tutorial @relation(fields: [tutorialId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, tutorialId]) // Ensure a user can purchase a tutorial only once
 }

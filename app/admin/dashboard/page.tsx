@@ -6,7 +6,9 @@ import { ArrowRight, Upload } from "lucide-react";
 import LogoHeader from "@/components/LogoHeader";
 import { useTutorialStore } from "@/store/tutorialStore";
 import Loading from "@/components/Loading";
+import TutorialCard from "@/components/TutorialCard";
 interface tutorial {
+  id: number;
   title: string;
   description: string;
   videoUrl: string;
@@ -56,25 +58,12 @@ export default function AdminDashboard() {
               {tutorials
                 .slice(0, visibleTutorials)
                 .map((tutorial: tutorial, index: number) => (
-                  <div
-                    key={index}
-                    className="bg-yellow-500 hover:bg-yellow-400 rounded-lg p-6 flex flex-col justify-between shadow-lg transform transition-transform hover:scale-105"
-                  >
-                    <h2 className="text-xl font-bold text-white mb-2">
-                      {tutorial.title}
-                    </h2>
-                    <p className="text-white text-sm mb-4">
-                      {tutorial.description}
-                    </p>
-                    <a
-                      href={tutorial.videoUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="bg-white text-yellow-500 font-semibold py-2 px-4 rounded-lg text-center hover:bg-gray-100"
-                    >
-                      View Tutorial
-                    </a>
-                  </div>
+                  <TutorialCard
+                  key={index}
+                    id={tutorial.id}
+                    title={tutorial.title}
+                    description={tutorial.description}
+                  />
                 ))}
             </div>
           ) : (

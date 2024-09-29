@@ -3,29 +3,13 @@ import Loading from "@/components/Loading";
 import LogoHeader from "@/components/LogoHeader";
 import { useCustomSession } from "@/hooks/session";
 import { useTutorialStore } from "@/store/tutorialStore";
-// import { useUserStore } from "@/store/userStore";
 import React, { useEffect } from "react";
+import TutorialCard from "@/components/TutorialCard"; // Import the new component
 
-interface tutorial {
-  title: string;
-  description: string;
-  videoUrl: string;
-}
-
-const Page = () => {
-  // const { user, fetchUser } = useUserStore();
+const CoursePage = () => {
   const { tutorials, fetchTutorials } = useTutorialStore();
   const { isLoggedIn } = useCustomSession();
 
-  // Fetch the user when logged in
-  // useEffect(() => {
-  //   if (!user && isLoggedIn) {
-  //     fetchUser();
-  //     console.log(user);
-  //   }
-  // }, [session, isLoggedIn]);
-
-  // Fetch the tutorials when the user is available and logged in
   useEffect(() => {
     if (isLoggedIn) {
       fetchTutorials();
@@ -48,26 +32,13 @@ const Page = () => {
         <h1 className="w-full text-white text-3xl mb-6">My Courses</h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {tutorials && tutorials.length > 0 ? (
-            tutorials.map((tutorial: tutorial, index: number) => (
-              <div
-                key={index}
-                className="bg-yellow-500 hover:bg-yellow-400 rounded-lg p-6 flex flex-col justify-between shadow-lg transform transition-transform hover:scale-105"
-              >
-                <h2 className="text-xl font-bold text-white mb-2">
-                  {tutorial.title}
-                </h2>
-                <p className="text-white text-sm mb-4">
-                  {tutorial.description}
-                </p>
-                <a
-                  href={tutorial.videoUrl} // Assuming links is an array, you may need to adjust this
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-white text-yellow-500 font-semibold py-2 px-4 rounded-lg text-center hover:bg-gray-100"
-                >
-                  View Tutorial
-                </a>
-              </div>
+            tutorials.map((tutorial) => (
+              <TutorialCard
+                key={tutorial.id} // Use id as the key
+                id={tutorial.id}
+                title={tutorial.title}
+                description={tutorial.description}
+              />
             ))
           ) : (
             <p className="text-white">No tutorials found</p>
@@ -78,4 +49,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default CoursePage;

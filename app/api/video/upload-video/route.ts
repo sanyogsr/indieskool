@@ -25,6 +25,7 @@ export async function POST(req: NextRequest) {
     const description = formData.get("description")?.toString();
     const videoFile = formData.get("video") as File | null;
     const userId = formData.get("userId")?.toString();
+    const price = parseInt(formData.get("price")?.toString() || "0"); // Extract price
 
     if (!videoFile) {
       return NextResponse.json(
@@ -49,6 +50,7 @@ export async function POST(req: NextRequest) {
         title: title || "",
         description: description || "",
         videoUrl: videoUrl,
+        price: price, 
         links: {
           create: extractLinks(formData),
         },
