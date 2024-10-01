@@ -52,8 +52,8 @@ export async function POST(req: Request) {
       connected: false, // Mark connected once verified
     },
   });
-  const refreshUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/profile`;
-  const returnUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/profile`;
+  const refreshUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/admin/profile`;
+  const returnUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/admin/profile`;
   console.log("Refresh URL:", refreshUrl);
   console.log("Return URL:", returnUrl);
   // Send Stripe account URL to complete the onboarding
