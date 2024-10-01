@@ -84,10 +84,13 @@ export async function POST(req: Request) {
     // Map Stripe payment status to Prisma enum
     const paymentStatus = mapStripePaymentStatus(session);
 
+    // Extract the Stripe payment intent ID
+    const paymentIntentId = (session.payment_intent as Stripe.PaymentIntent).id;
+
     // Create a Payment record
     const payment = await prisma.payment.create({
       data: {
-        stripePaymentId: session.payment_intent as string,
+        stripePaymentId: paymentIntentId, // Pass the string ID, not the object
         userId: userId,
         amount: session.amount_total!,
         currency: session.currency!,
