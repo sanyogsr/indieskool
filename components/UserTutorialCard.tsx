@@ -85,13 +85,23 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
         </div>
 
         {/* Enroll Button */}
-        <button
-          onClick={() => onEnroll && onEnroll(id)}
-          className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-2 px-4 rounded-full transition-colors duration-300 flex items-center justify-center"
-        >
-          <BookOpen size={18} className="mr-2" />
-          {isPurchased ? "Start Learning" : "Enroll Now"}
-        </button>
+        {isPurchased ? (
+          <button
+            // onClick={  }
+            className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-2 px-4 rounded-full transition-colors duration-300 flex items-center justify-center"
+          >
+            <BookOpen size={18} className="mr-2" />
+            Start Learning
+          </button>
+        ) : (
+          <button
+            onClick={() => onEnroll && onEnroll(id)}
+            className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-2 px-4 rounded-full transition-colors duration-300 flex items-center justify-center"
+          >
+            <BookOpen size={18} className="mr-2" />
+            Enroll Now
+          </button>
+        )}
       </div>
     </div>
   );
