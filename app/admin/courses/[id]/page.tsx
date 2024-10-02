@@ -1,75 +1,8 @@
-// "use client"; // Marking the component as a Client Component
-
-// import { useEffect, useState } from "react";
-// import { useRouter } from "next/navigation"; // Import from next/navigation
-// import { useTutorialStore } from "@/store/tutorialStore";
-// import Loading from "@/components/Loading";
-
-// interface TutorialDetailProps {
-//   params: {
-//     id: number; // Define the expected parameter type as a number
-//   };
-// }
-
-// const TutorialDetail = ({ params }: TutorialDetailProps) => {
-//   const { id } = params; // Accessing the id directly from props
-//   const { singleTutorial, fetchTutorialById } = useTutorialStore();
-//   const [tutorial, setTutorial] = useState<any>(null);
-
-//   useEffect(() => {
-//     if (id) {
-//       // Check if singleTutorial is defined and an array
-//       if (Array.isArray(singleTutorial)) {
-//         // Find the tutorial by id in the store
-//         const foundTutorial = singleTutorial.find((tut: any) => tut.id === id);
-//         if (foundTutorial) {
-//           setTutorial(foundTutorial);
-//         } else {
-//           // Fetch from the backend if needed
-//           fetchTutorialById(id).then((fetchedTutorialById: any) => {
-//             setTutorial(fetchedTutorialById);
-//           });
-//         }
-//       } else {
-//         // Handle the case where singleTutorial is not an array
-//         console.error("singleTutorial is not an array", singleTutorial);
-//       }
-//     }
-//   }, [id, singleTutorial]);
-
-//   if (!tutorial) {
-//     return (
-//       <div className="flex justify-center items-center min-h-screen">
-//         <Loading />
-//       </div>
-//     );
-//   }
-
-//   return (
-//     <div className="min-h-screen p-6 bg-[#212121]">
-//       <div className="max-w-4xl mx-auto bg-gray-800 p-8 rounded-lg shadow-lg">
-//         <h1 className="text-3xl font-bold text-white mb-4">{tutorial.title}</h1>
-//         <p className="text-white mb-6">{tutorial.description}</p>
-//         <div className="aspect-w-16 aspect-h-9">
-//           <iframe
-//             className="w-full h-full"
-//             src={tutorial.videoUrl}
-//             title={tutorial.title}
-//             allowFullScreen
-//           ></iframe>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default TutorialDetail;
-"use client"; // Marking the component as a Client Component
-
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation"; // Import from next/navigation
+"use client";
+import React, { useEffect, useState } from "react";
 import { useTutorialStore } from "@/store/tutorialStore";
 import Loading from "@/components/Loading";
+import { ExternalLink } from "lucide-react";
 
 interface Link {
   id: number;
@@ -92,69 +25,107 @@ interface TutorialDetailProps {
 }
 
 const TutorialDetail = ({ params }: TutorialDetailProps) => {
-  const router = useRouter();
-  const { id } = params; // Accessing the id directly from props
+  const { id } = params;
   const { singleTutorial, fetchTutorialById } = useTutorialStore();
   const [tutorial, setTutorial] = useState<Tutorial | null>(null);
+  const [videoError, setVideoError] = useState<string | null>(null);
+  const [notFound, setNotFound] = useState<boolean>(false); // New state for handling invalid IDs
 
   useEffect(() => {
     if (id) {
-      // Check if singleTutorial is defined and an array
       if (Array.isArray(singleTutorial)) {
-        // Find the tutorial by id in the store
         const foundTutorial = singleTutorial.find((tut) => tut.id === id);
         if (foundTutorial) {
           setTutorial(foundTutorial);
         } else {
-          // Fetch from the backend if needed
-          fetchTutorialById(id).then((fetchedTutorialById) => {
-            setTutorial(fetchedTutorialById);
-          });
+          fetchTutorialById(id)
+            .then((fetchedTutorialById) => {
+              if (fetchedTutorialById) {
+                setTutorial(fetchedTutorialById);
+              } else {
+                setNotFound(true); // Tutorial not found
+              }
+            })
+            .catch(() => {
+              setNotFound(true); // Handle API errors
+            });
         }
       } else {
-        // Handle the case where singleTutorial is not an array
         console.error("singleTutorial is not an array", singleTutorial);
       }
     }
-  }, [id, singleTutorial]);
+  }, [id, singleTutorial, fetchTutorialById]);
+
+  if (notFound) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-[#212121]">
+        <h1 className="text-3xl font-bold text-red-500">
+          Tutorial Not Available
+        </h1>
+      </div>
+    );
+  }
 
   if (!tutorial) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
+      <div className="flex justify-center items-center min-h-screen bg-[#212121]">
         <Loading />
       </div>
     );
   }
 
+  const handleVideoError = () => {
+    setVideoError("Error loading video. Please check the URL and try again.");
+  };
+
   return (
-    <div className="min-h-screen p-6 sm:ml-64 bg-[#212121]">
-      <div className="max-w-7xl mx-auto bg-gray-800 p-8 rounded-lg shadow-lg">
+    <div className="min-h-screen sm:ml-64 p-6 bg-[#212121]">
+      <div className="max-w-4xl mx-auto">
         {/* Video Section */}
-        <div className="aspect-w-16 aspect-h-9 mb-6">
-          <iframe
-            className="min-h-screen min-w-full rounded-lg border border-gray-700"
-            src={tutorial.videoUrl}
-            title={tutorial.title}
-            allowFullScreen
-          ></iframe>
+        <div className="mb-6">
+          <h2 className="text-2xl font-semibold text-cyan-300 mb-2">Video</h2>
+          {videoError ? (
+            <p className="text-red-500">{videoError}</p>
+          ) : (
+            <div className="relative aspect-w-16 aspect-h-9 rounded-lg overflow-hidden shadow-lg">
+              <video
+                className="w-full h-full"
+                controls
+                onError={handleVideoError}
+              >
+                <source src={tutorial.videoUrl} type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          )}
         </div>
 
         {/* Title and Description Section */}
-        <h1 className="text-3xl font-bold text-white mb-2">{tutorial.title}</h1>
-        <p className="text-gray-300 mb-6">{tutorial.description}</p>
+        <div className="bg-[#1a1811] rounded-lg p-6 mb-6 shadow-lg">
+          <h1 className="text-3xl font-bold text-cyan-300 mb-4">
+            {tutorial.title}
+          </h1>
+          <p className="text-gray-300 mb-6 leading-relaxed">
+            {tutorial.description}
+          </p>
+        </div>
 
         {/* Links Section */}
-        <div className="mt-6">
-          <h2 className="text-xl font-semibold text-white mb-2">
+        <div className="bg-[#1a1811] rounded-lg p-6 shadow-lg">
+          <h2 className="text-2xl font-semibold text-cyan-300 mb-4">
             Useful Links
           </h2>
-          <ul className="list-disc list-inside text-gray-300">
+          <ul className="space-y-2">
             {tutorial.links &&
               tutorial.links.map((link) => (
-                <li key={link.id} className="mb-1">
+                <li key={link.id} className="flex items-center">
+                  <ExternalLink
+                    className="text-purple-400 mr-2 flex-shrink-0"
+                    size={18}
+                  />
                   <a
                     href={link.url}
-                    className="text-blue-400 hover:underline"
+                    className="text-gray-300 hover:text-pink-400 transition-colors duration-200"
                     target="_blank"
                     rel="noopener noreferrer"
                   >

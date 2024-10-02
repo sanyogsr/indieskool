@@ -112,7 +112,9 @@ const RevenuePage = () => {
           <h1 className="text-white text-2xl">Revenue Page</h1>
 
           {loading ? (
-            <p className="text-gray-400">Loading...</p>
+            <div className="flex items-center justify-center h-screen">
+              <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-purple-500"></div>
+            </div>
           ) : error ? (
             <p className="text-red-500">{error}</p>
           ) : (

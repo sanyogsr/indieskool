@@ -62,7 +62,7 @@ export default function Login() {
         </h1>
       </Link>
       <div className="flex-grow flex items-center justify-center">
-        <div className="relative flex flex-col items-center justify-center bg-gradient-to-r from-yellow-400 to-orange-500 w-full max-w-md mx-4 sm:mx-6 md:mx-8 lg:mx-10 h-[400px] md:h-[350px] sm:h-[350px] border border-white rounded-xl p-6">
+        <div className="relative flex flex-col items-center justify-center bg-gradient-to-r from-yellow-400 to-orange-500 w-full max-w-sm mx-4 sm:mx-6 md:mx-8 lg:mx-10 h-[400px] md:h-[350px] sm:h-[350px] border border-white rounded-xl p-6">
           <div className="absolute top-6 bg-[#212121] p-2 rounded-lg">
             <h1 className="text-xl md:text-2xl font-bold text-white">Login</h1>
           </div>

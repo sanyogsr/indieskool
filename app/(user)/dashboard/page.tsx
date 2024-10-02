@@ -1,12 +1,8 @@
 "use client";
 import { useCustomSession } from "@/hooks/session";
-import apj from "../../../public/images/apjsir.jpg";
-import { ArrowBigRight, Divide, Plus } from "lucide-react";
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import Image from "next/image";
+import { Plus } from "lucide-react";
+import { useState } from "react";
 import LogoHeader from "@/components/LogoHeader";
-import Loading from "@/components/Loading";
 
 interface courseCard {
   name: string;
@@ -18,8 +14,8 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <Loading />
+      <div className="flex items-center justify-center h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-purple-500"></div>
       </div>
     );
   }

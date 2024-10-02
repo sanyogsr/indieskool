@@ -10,9 +10,12 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { signOut } from "next-auth/react";
 
 function Sidebar({ admin }: { admin: boolean }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpenModal, setIsOpenModal] = useState(false);
+
   const pathname = usePathname();
 
   const sidebarItems = [
@@ -43,6 +46,16 @@ function Sidebar({ admin }: { admin: boolean }) {
   const closeSidebar = () => {
     setIsOpen(false);
   };
+
+  const toggleModal = () => {
+    setIsOpenModal(!isOpenModal);
+  };
+
+  const handleLogout = async () => {
+    await signOut({ callbackUrl: "/" });
+    setIsOpenModal(false);
+  };
+
   return (
     <>
       <div className="bg-[#212121] flex items-center justify-between p-2 sm:hidden  md:hidden lg:hidden ">
@@ -65,13 +78,34 @@ function Sidebar({ admin }: { admin: boolean }) {
         </h1>
         <div className="mr-2">
           <button
-            //   onClick={toggleModal}
+            onClick={toggleModal}
             className="px-4 py-2 text-white bg-red-600 rounded"
           >
             Logout
           </button>
         </div>
       </div>
+      {isOpenModal && (
+        <div className="fixed inset-0 z-50 flex justify-center items-center bg-black bg-opacity-50">
+          <div className="bg-white p-5 rounded-lg shadow-lg">
+            <h3 className="mb-5 text-lg">Are you sure you want to logout?</h3>
+            <div className="flex justify-around">
+              <button
+                onClick={handleLogout}
+                className="px-4 py-2 text-white bg-red-600 rounded hover:bg-red-500"
+              >
+                Yes, Logout
+              </button>
+              <button
+                onClick={toggleModal}
+                className="px-4 py-2 text-black bg-gray-300 rounded"
+              >
+                No, Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <aside
         className={`fixed top-0 left-0 z-40 w-64 h-screen transition-transform bg-[#212121] border-r border-slate-600 ${
           isOpen ? "translate-x-0" : "-translate-x-full"

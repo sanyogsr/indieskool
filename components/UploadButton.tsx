@@ -1,65 +1,66 @@
-import React from 'react';
+"use client";
+import React, { useEffect, useRef, useState } from "react";
 
 interface UploadButtonProps {
-  uploading: boolean;                 // Indicates if uploading is in progress
-  initialText?: string;               // Initial button text (optional)
-  uploadingText?: string;             // Text to show during upload (optional)
-  successText?: string;               // Text to show after success (optional)
-  initialBgColor?: string;            // Initial background color (optional)
-  uploadingBgColor?: string;          // Background color during upload (optional)
-  successBgColor?: string;            // Background color after success (optional)
-  hoverColor?: string;                // Hover color when not uploading (optional)
+  uploading: boolean; // Indicates if uploading is in progress
+  initialText?: string; // Initial button text (optional)
+  uploadingText?: string; // Text to show during upload (optional)
+  successText?: string; // Text to show after success (optional)
+  initialBgColor?: string; // Initial background color (optional)
+  uploadingBgColor?: string; // Background color during upload (optional)
+  successBgColor?: string; // Background color after success (optional)
+  hoverColor?: string; // Hover color when not uploading (optional)
 }
 
-const UploadButton: React.FC<UploadButtonProps> = ({
-  uploading,
-  initialText = 'Upload Tutorial',
-  uploadingText = 'Uploading...',
-  successText = 'Uploaded Successfully',
-  initialBgColor = 'bg-blue-500',
-  uploadingBgColor = 'bg-blue-700',
-  successBgColor = 'bg-green-500',
-  hoverColor = 'hover:bg-yellow-700',
-}) => {
-  const [success, setSuccess] = React.useState(false);
+const UploadButton: React.FC<{
+  uploading: boolean;
+  onClick: () => void;
+  disabled: boolean;
+}> = ({ uploading, onClick, disabled }) => {
+  const [success, setSuccess] = useState(false);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!uploading && success) {
       const timer = setTimeout(() => {
-        setSuccess(false); // Reset success state after 2 seconds
+        setSuccess(false);
       }, 2000);
-
-      return () => clearTimeout(timer); // Cleanup timer on unmount
+      return () => clearTimeout(timer);
     }
   }, [uploading, success]);
 
-  const buttonText = uploading
-    ? uploadingText
-    : success
-    ? successText
-    : initialText;
+  const handleClick = () => {
+    if (!uploading && !disabled) {
+      onClick();
+      setSuccess(true);
+    }
+  };
 
-  const buttonBgColor = uploading
-    ? uploadingBgColor
+  const buttonText = uploading
+    ? "Uploading..."
     : success
-    ? successBgColor
-    : `${initialBgColor} ${hoverColor}`;
+    ? "Uploaded Successfully"
+    : "Upload Tutorial";
+  const buttonClass = `px-4 py-2.5 rounded-lg text-white font-medium text-sm transition-all duration-300 ${
+    uploading
+      ? "bg-blue-700"
+      : success
+      ? "bg-green-500"
+      : disabled
+      ? "bg-gray-500 cursor-not-allowed"
+      : "bg-blue-500 hover:bg-blue-600 active:bg-blue-700"
+  }`;
 
   return (
     <button
+      ref={buttonRef}
       type="submit"
-      className={`px-4 text-white focus:outline-none focus:ring-4 font-medium rounded-lg text-sm flex justify-center items-center py-2.5 transition-all duration-300 ${buttonBgColor}`}
-      disabled={uploading} // Disable the button while uploading
-      onClick={() => {
-        if (!uploading) {
-          // Trigger upload and set success to true after upload completes
-          setSuccess(true); // Set success to true after successful upload
-        }
-      }}
+      className={buttonClass}
+      disabled={uploading || disabled}
+      onClick={handleClick}
     >
       {buttonText}
     </button>
   );
 };
-
 export default UploadButton;
