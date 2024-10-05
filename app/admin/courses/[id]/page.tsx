@@ -74,6 +74,8 @@ const TutorialDetail = ({ params }: TutorialDetailProps) => {
     );
   }
 
+
+
   const handleVideoError = () => {
     setVideoError("Error loading video. Please check the URL and try again.");
   };

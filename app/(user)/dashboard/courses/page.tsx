@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useUserStore } from "@/store/userStore";
 import TutorialCard from "@/components/UserTutorialCard"; // Adjust the import path as needed
+import { useRouter } from "next/navigation";
 
 interface Tutorial {
   id: number;
@@ -24,6 +25,7 @@ const TutorialPage = () => {
   const [tutorials, setTutorials] = useState<Tutorial[]>([]);
   const [loading, setLoading] = useState(true);
   const { user, fetchUser } = useUserStore();
+  const router = useRouter();
 
   useEffect(() => {
     fetchUser();
@@ -74,11 +76,7 @@ const TutorialPage = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {tutorials.length > 0 ? (
           tutorials.map((tutorial) => (
-            <TutorialCard
-              key={tutorial.id}
-              {...tutorial}
-              // onEnroll={handleEnroll}
-            />
+            <TutorialCard key={tutorial.id} {...tutorial} />
           ))
         ) : (
           <div className="col-span-1 md:col-span-2 lg:col-span-3 text-center">

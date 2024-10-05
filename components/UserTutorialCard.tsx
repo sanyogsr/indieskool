@@ -1,5 +1,7 @@
+"use client";
 import React from "react";
-import { BookOpen, DollarSign, Clock, Star } from "lucide-react";
+import { BookOpen, DollarSign, Clock, Star, Link } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface TutorialCardProps {
   id: number;
@@ -31,6 +33,8 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
     Intermediate: "bg-yellow-500",
     Advanced: "bg-red-500",
   };
+
+  const router = useRouter();
 
   return (
     <div className="bg-gray-900 rounded-lg overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 transform">
@@ -86,14 +90,16 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
 
         {/* Enroll Button */}
         {isPurchased ? (
+          // <Link href={`/dashboard/courses/${id}`}>
           <button
-            // onClick={  }
+            onClick={() => router.push(`/dashboard/courses/${id}`)}
             className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-2 px-4 rounded-full transition-colors duration-300 flex items-center justify-center"
           >
             <BookOpen size={18} className="mr-2" />
             Start Learning
           </button>
         ) : (
+          // </Link>
           <button
             onClick={() => onEnroll && onEnroll(id)}
             className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-2 px-4 rounded-full transition-colors duration-300 flex items-center justify-center"

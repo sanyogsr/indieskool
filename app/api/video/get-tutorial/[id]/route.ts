@@ -3,7 +3,10 @@ import { getServerSession } from "next-auth/next";
 import { NextResponse } from "next/server";
 import prisma from "@/lib/db";
 // get tutorials
-export async function GET(req:Request,{ params }: { params: { id: string } }) {
+export async function GET(
+  req: Request,
+  { params }: { params: { id: string } }
+) {
   const session = await getServerSession(authOptions);
 
   if (!session || !session.user || !session.user.email) {
@@ -24,11 +27,10 @@ export async function GET(req:Request,{ params }: { params: { id: string } }) {
     const tutorialId = parseInt(tutorial, 10);
 
     const getTut = await prisma.tutorial.findUnique({
-      where: { userId: user.id ,id:tutorialId},
+      where: { userId: user.id, id: tutorialId },
       include: { links: true },
     });
     return NextResponse.json(getTut);
-    console.log(getTut);
   } catch (error) {
     console.error("error in getting tutorials", error);
     return NextResponse.json(
