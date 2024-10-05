@@ -24,7 +24,7 @@ export default function Navbar() {
     >
       <Link href="#" className="flex lg:mx-0 mx-auto" prefetch={false}>
         <h1 className="text-black font-extrabold text-4xl">
-          Indie<span className="text-[#212121]">Skool</span>
+          Indie<span className="text-black">Skool</span>
         </h1>
       </Link>
 

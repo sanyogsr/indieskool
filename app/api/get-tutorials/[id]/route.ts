@@ -1,4 +1,3 @@
-// app/api/tutorials/[id]/route.ts
 import { NextResponse } from "next/server";
 import prisma from "@/lib/db";
 
@@ -6,24 +5,24 @@ export async function GET(
   request: Request,
   { params }: { params: { id: string } }
 ) {
-  const userId = request.headers.get("userId");
-  const tutorialId = parseInt(params.id, 10);
-
-  if (!userId) {
-    return NextResponse.json(
-      { error: "User ID is required." },
-      { status: 400 }
-    );
-  }
-
   try {
+    const tutorialId = parseInt(params.id);
+
+    if (isNaN(tutorialId)) {
+      return NextResponse.json(
+        { error: "Invalid tutorial ID" },
+        { status: 400 }
+      );
+    }
+
     const tutorial = await prisma.tutorial.findUnique({
       where: { id: tutorialId },
       include: {
-        links: true,
         user: {
           select: {
-            name: true,
+            stripeAccount: {
+              select: { stripeAccountId: true },
+            },
           },
         },
       },
@@ -36,28 +35,21 @@ export async function GET(
       );
     }
 
-    const userTutorial = await prisma.userTutorial.findUnique({
-      where: {
-        userId_tutorialId: {
-          userId: userId,
-          tutorialId: tutorialId,
-        },
-      },
-    });
+    // Restructure the data to include the Stripe account ID directly
+    const { user, ...tutorialWithoutUser } = tutorial; // Destructure user here
 
-    const tutorialWithPurchaseStatus = {
-      ...tutorial,
-      isPurchased: !!userTutorial,
-      authorName: tutorial.user.name,
+    const tutorialWithStripeAccount = {
+      ...tutorialWithoutUser,
+      ownerStripeAccountId:
+        tutorial.user.stripeAccount?.stripeAccountId || null,
     };
 
-    // Remove sensitive information
-    // delete? tutorialWithPurchaseStatus.userId
-    // delete? tutorialWithPurchaseStatus.user
-
-    return NextResponse.json(tutorialWithPurchaseStatus);
+    return NextResponse.json(tutorialWithStripeAccount);
   } catch (error) {
-    console.error(error);
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
+    console.error("Error fetching tutorial:", error);
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
   }
 }

@@ -26,6 +26,7 @@ export async function GET() {
       include: { links: true },
     });
     return NextResponse.json(getTut);
+    console.log(getTut);
   } catch (error) {
     console.error("error in getting tutorials", error);
     return NextResponse.json(
@@ -34,5 +35,3 @@ export async function GET() {
     );
   }
 }
-
-

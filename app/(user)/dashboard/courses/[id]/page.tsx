@@ -32,9 +32,12 @@ const TutorialDetailPage = ({ params }: { params: { id: string } }) => {
     const fetchTutorial = async () => {
       if (!user || !user.id) return;
       try {
-        const response = await axios.get(`/api/get-tutorials/${params.id}`, {
-          headers: { userId: user.id },
-        });
+        const response = await axios.get(
+          `/api/get-tutorials/purchased/${params.id}`,
+          {
+            headers: { userId: user.id },
+          }
+        );
         setTutorial(response.data);
       } catch (error) {
         console.error("Error fetching tutorial:", error);

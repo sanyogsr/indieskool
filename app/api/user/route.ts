@@ -42,6 +42,7 @@ export async function GET() {
         hasStripeAccount, // Return true or false based on Stripe account existence
       },
     });
+    console.log(user);
   } catch (error) {
     return NextResponse.json(
       { error: "Failed to fetch user data" },

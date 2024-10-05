@@ -35,7 +35,7 @@ const TutorialPage = () => {
     const fetchTutorials = async () => {
       if (!user || !user.id) return;
       try {
-        const response: ApiResponse = await axios.get(`/api/get-tutorials`, {
+        const response: ApiResponse = await axios.get(`/api/get-tutorials/`, {
           headers: { userId: user.id },
         });
 
