@@ -27,10 +27,10 @@ const AboutPage = () => {
             <p className="text-lg mb-8 leading-relaxed text-gray-300">
               IndieSkool is your ultimate platform to learn the art of indie
               hacking. We connect aspiring creators with experienced indie
-              hackers to help you build and grow your projects. Whether you're
-              just starting out or looking for advanced mentorship, IndieSkool
-              provides the resources, tutorials, and community to help you
-              succeed.
+              hackers to help you build and grow your projects. Whether
+              you&apos;re just starting out or looking for advanced mentorship,
+              IndieSkool provides the resources, tutorials, and community to
+              help you succeed.
             </p>
             <p className="text-lg mb-8 leading-relaxed text-gray-300">
               Join a community of creators, collaborate with like-minded
