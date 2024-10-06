@@ -15,7 +15,7 @@ export default function FloatingAvatars() {
 function FixedAvatar() {
   return (
     <Link href={"https://x.com/sanyogsr"} target="_blank">
-      <div className="relative group flex cursor-pointer items-center justify-center p-4 m-2 w-26 h-8 bg-gray-200 rounded-lg shadow-lg transform transition-transform duration-500 hover:scale-110 hover:bg-gray-300">
+      <div className=" hidden relative group lg:flex cursor-pointer items-center justify-center p-4 m-2 w-26 h-8 bg-gray-200 rounded-lg shadow-lg transform transition-transform duration-500 hover:scale-110 hover:bg-gray-300">
         {/* Avatar with Twitter icon */}
         <div className="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-300 top-full left-1/2 transform -translate-x-1/2 mt-2 p-2 bg-black text-white rounded-md text-xs shadow-lg">
           Go to sanyogsr

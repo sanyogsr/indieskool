@@ -22,7 +22,7 @@ export default function Navbar() {
         sm:rounded-none 
       "
     >
-      <Link href="#" className="flex lg:mx-0 mx-auto" prefetch={false}>
+      <Link href="/" className="flex lg:mx-0 mx-auto" prefetch={false}>
         <h1 className="text-black font-extrabold text-4xl">
           Indie<span className="text-black">Skool</span>
         </h1>
@@ -53,37 +53,18 @@ export default function Navbar() {
         <ul className="flex flex-col items-center justify-center gap-6 h-[80%]">
           <li>
             <Link
-              href="#"
+              href="/login"
               className="text-lg font-medium hover:underline underline-offset-4"
               prefetch={false}
               onClick={toggleMenu}
             >
-              Courses
+              Tutorials
             </Link>
           </li>
+
           <li>
             <Link
-              href="#"
-              className="text-lg font-medium hover:underline underline-offset-4"
-              prefetch={false}
-              onClick={toggleMenu}
-            >
-              Discord
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="#"
-              className="text-lg font-medium hover:underline underline-offset-4"
-              prefetch={false}
-              onClick={toggleMenu}
-            >
-              Resources
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="#"
+              href="/about"
               className="text-lg font-medium hover:underline underline-offset-4"
               prefetch={false}
               onClick={toggleMenu}
@@ -97,28 +78,15 @@ export default function Navbar() {
       {/* Desktop Menu */}
       <nav className="hidden lg:flex gap-10 py-5 px-10 bg-[#212121] rounded-full">
         <Link
-          href="#"
+          href="/login"
           className="text-xl font-medium hover:underline underline-offset-4 text-white"
           prefetch={false}
         >
-          Courses
+          Tutorials
         </Link>
+
         <Link
-          href="#"
-          className="text-xl font-medium hover:underline underline-offset-4 text-white"
-          prefetch={false}
-        >
-          Discord
-        </Link>
-        <Link
-          href="#"
-          className="text-xl font-medium hover:underline underline-offset-4 text-white"
-          prefetch={false}
-        >
-          Resources
-        </Link>
-        <Link
-          href="#"
+          href="/about"
           className="text-xl font-medium hover:underline underline-offset-4 text-white"
           prefetch={false}
         >
