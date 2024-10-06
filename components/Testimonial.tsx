@@ -25,7 +25,7 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
       <img
         src={photo}
         alt={name}
-        className="w-20 h-20 rounded-full mb-4 object-cover"
+        className="w-10 h-10 rounded-full mb-4 object-cover"
       />
       <blockquote className="text-lg font-medium leading-relaxed mb-4 text-center text-gray-700">
         &quot;{quote}&quot;
@@ -91,11 +91,11 @@ export default function Testimonial() {
   ];
 
   return (
-    <div className="py-12">
+    <div className="py-6 ">
       <h2 className="text-3xl text-white font-bold text-center mb-12">
-        What Our Customers Say
+        Testimonials{" "}
       </h2>
-      <div className="grid md:grid-cols-2  gap-8 max-w-3xl mx-3">
+      <div className="grid md:grid-cols-2  gap-8 max-w-xs md:max-w-2xl mx-3">
         {testimonials.map((testimonial, index) => (
           <TestimonialCard key={index} {...testimonial} />
         ))}

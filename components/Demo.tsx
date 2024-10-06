@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Demo() {
   return (
-    <div className="flex flex-col items-center gap-6 px-4 md:px-6 lg:gap-10 max-w-7xl mx-auto w-full">
+    <div className="flex flex-col items-center mt-5 gap-6 px-4 md:px-6 lg:gap-10 max-w-7xl mx-auto w-full">
       {/* Title and Video */}
       <div className="space-y-4 flex flex-col items-center w-full">
         <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight text-[#ffffff]">
