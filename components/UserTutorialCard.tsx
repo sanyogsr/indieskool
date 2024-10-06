@@ -3,6 +3,7 @@ import React from "react";
 import { BookOpen, DollarSign, Clock } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 
 interface TutorialCardProps {
   id: number;
@@ -87,21 +88,22 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
 
         {/* Enroll Button */}
         {isPurchased ? (
-          <button
-            onClick={() => router.push(`/dashboard/courses/${id}`)}
+          <Link
+            href={`/dashboard/courses/${id}`}
             className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-2 px-4 rounded-full transition-colors duration-300 flex items-center justify-center"
           >
             <BookOpen size={18} className="mr-2" />
             Start Learning
-          </button>
+          </Link>
         ) : (
-          <button
+          <Link
+            href="#"
             onClick={() => onEnroll && onEnroll(id)}
             className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-2 px-4 rounded-full transition-colors duration-300 flex items-center justify-center"
           >
             <BookOpen size={18} className="mr-2" />
             Enroll Now
-          </button>
+          </Link>
         )}
       </div>
     </div>
