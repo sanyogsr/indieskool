@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
         title: title || "",
         description: description || "",
         videoUrl: videoUrl,
-        price: price, 
+        price: price,
         links: {
           create: extractLinks(formData),
         },

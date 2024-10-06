@@ -1,3 +1,4 @@
+import Image from "next/image";
 import React from "react";
 
 interface Profile {
@@ -24,7 +25,7 @@ const ScrollingProfileCarousel: React.FC = () => {
         <div className="profile-carousel">
           {[...profiles, ...profiles, ...profiles].map((profile, index) => (
             <div key={`${profile.id}-${index}`} className="profile-item">
-              <img
+              <Image
                 src={profile.avatar}
                 alt={profile.name}
                 className="w-16 h-16 rounded-full border-2 border-white mx-auto"

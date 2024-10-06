@@ -1,7 +1,8 @@
 "use client";
 import React from "react";
-import { BookOpen, DollarSign, Clock, Star, Link } from "lucide-react";
+import { BookOpen, DollarSign, Clock } from "lucide-react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 interface TutorialCardProps {
   id: number;
@@ -9,7 +10,7 @@ interface TutorialCardProps {
   description: string;
   price: number;
   isPurchased: boolean;
-  thumbnail?: string; // Added thumbnail prop
+  thumbnail?: string;
   duration?: string;
   rating?: number;
   difficulty?: "Beginner" | "Intermediate" | "Advanced";
@@ -40,23 +41,31 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
     <div className="bg-gray-900 rounded-lg overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 transform">
       {/* Thumbnail Section */}
       {thumbnail ? (
-        <img src={thumbnail} alt={title} className="w-full h-48 object-cover" />
+        <Image
+          src={thumbnail}
+          alt={title}
+          className="w-full h-48 object-cover"
+        />
       ) : (
         <div className="w-full h-48 flex items-center justify-center bg-gray-800 text-cyan-300 text-2xl font-bold">
-          {title}
+          {title.length > 30 ? `${title.substring(0, 30)}...` : title}
         </div>
       )}
 
       {/* Content Section */}
-      <div className="p-6">
-        <div className="flex justify-between items-start mb-4">
-          <div>
-            <h2 className="text-xl font-semibold text-cyan-300">{title}</h2>
-            <p className="text-gray-400 text-sm mt-1 mb-4 line-clamp-3">
-              {description}
-            </p>
-          </div>
+      <div className="p-4 sm:p-6">
+        {/* Title and Description */}
+        <div className="mb-4">
+          <h2 className="text-xl font-semibold text-cyan-300 truncate">
+            {title}
+          </h2>
+          <p className="text-gray-400 text-sm mt-1 mb-2 line-clamp-2">
+            {description}
+          </p>
+        </div>
 
+        {/* Status Section */}
+        <div className="flex justify-between items-center mb-4">
           <div className="flex items-center gap-2">
             {isPurchased ? (
               <span className="bg-green-500 text-white px-3 py-1 rounded-full text-xs">
@@ -74,23 +83,16 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
               {difficulty}
             </span>
           </div>
-        </div>
 
-        {/* Details Section */}
-        <div className="flex justify-between items-center mb-4">
+          {/* Duration Section */}
           <div className="flex items-center text-gray-400">
             <Clock size={14} className="mr-1" />
             <span className="text-sm">{duration}</span>
-          </div>
-          <div className="flex items-center text-yellow-400">
-            <Star size={14} className="mr-1" />
-            <span className="text-sm">{rating.toFixed(1)}</span>
           </div>
         </div>
 
         {/* Enroll Button */}
         {isPurchased ? (
-          // <Link href={`/dashboard/courses/${id}`}>
           <button
             onClick={() => router.push(`/dashboard/courses/${id}`)}
             className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-2 px-4 rounded-full transition-colors duration-300 flex items-center justify-center"
@@ -99,7 +101,6 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
             Start Learning
           </button>
         ) : (
-          // </Link>
           <button
             onClick={() => onEnroll && onEnroll(id)}
             className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-2 px-4 rounded-full transition-colors duration-300 flex items-center justify-center"

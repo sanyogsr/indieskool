@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useTutorialStore } from "@/store/tutorialStore";
 import Loading from "@/components/Loading";
 import { ExternalLink } from "lucide-react";
+import Player from "next-video/player";
 
 interface Link {
   id: number;
@@ -29,7 +30,7 @@ const TutorialDetail = ({ params }: TutorialDetailProps) => {
   const { singleTutorial, fetchTutorialById } = useTutorialStore();
   const [tutorial, setTutorial] = useState<Tutorial | null>(null);
   const [videoError, setVideoError] = useState<string | null>(null);
-  const [notFound, setNotFound] = useState<boolean>(false); // New state for handling invalid IDs
+  const [notFound, setNotFound] = useState<boolean>(false);
 
   useEffect(() => {
     if (id) {
@@ -43,11 +44,11 @@ const TutorialDetail = ({ params }: TutorialDetailProps) => {
               if (fetchedTutorialById) {
                 setTutorial(fetchedTutorialById);
               } else {
-                setNotFound(true); // Tutorial not found
+                setNotFound(true);
               }
             })
             .catch(() => {
-              setNotFound(true); // Handle API errors
+              setNotFound(true);
             });
         }
       } else {
@@ -88,24 +89,17 @@ const TutorialDetail = ({ params }: TutorialDetailProps) => {
             <p className="text-red-500">{videoError}</p>
           ) : (
             <div className="relative aspect-w-16 aspect-h-9 rounded-lg overflow-hidden shadow-lg">
-              <video
-                className="w-full h-full"
-                controls
-                onError={handleVideoError}
-              >
-                <source src={tutorial.videoUrl} type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
+              <Player className="w-full h-full" src={tutorial.videoUrl} />
             </div>
           )}
         </div>
 
         {/* Title and Description Section */}
-        <div className="bg-[#1a1811] rounded-lg p-6 mb-6 shadow-lg">
-          <h1 className="text-3xl font-bold text-cyan-300 mb-4">
+        <div className="bg-[#1a1811] rounded-lg p-6 mb-6 shadow-lg overflow-hidden">
+          <h1 className="text-3xl font-bold text-cyan-300 mb-4 break-words">
             {tutorial.title}
           </h1>
-          <p className="text-gray-300 mb-6 leading-relaxed">
+          <p className="text-gray-300 mb-6 leading-relaxed break-words whitespace-pre-wrap">
             {tutorial.description}
           </p>
         </div>
@@ -125,7 +119,7 @@ const TutorialDetail = ({ params }: TutorialDetailProps) => {
                   />
                   <a
                     href={link.url}
-                    className="text-gray-300 hover:text-pink-400 transition-colors duration-200"
+                    className="text-gray-300 hover:text-pink-400 transition-colors duration-200 break-all"
                     target="_blank"
                     rel="noopener noreferrer"
                   >

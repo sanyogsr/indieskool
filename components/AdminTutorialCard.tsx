@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { BookOpen } from "lucide-react";
+import Image from "next/image";
 
 interface TutorialCardProps {
   id: number;
@@ -20,7 +21,7 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
       {/* Thumbnail Section */}
       <div className="relative w-full h-[20em] overflow-hidden">
         {thumbnailUrl ? (
-          <img
+          <Image
             src={thumbnailUrl}
             alt={title}
             className="object-cover w-full h-full"

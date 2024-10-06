@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { FaTwitter, FaLinkedin } from "react-icons/fa";
 
 interface TestimonialCardProps {
@@ -21,7 +22,7 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({
 }) => (
   <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
     <div className="p-6 flex flex-col items-center">
-      <img
+      <Image
         src={photo}
         alt={name}
         className="w-20 h-20 rounded-full mb-4 object-cover"

@@ -3,9 +3,8 @@ import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import ReactPlayer from "react-player";
 import { useUserStore } from "@/store/userStore";
-import { useRouter } from "next/navigation";
 import { FaPlay, FaPause, FaBackward, FaForward, FaCog } from "react-icons/fa";
-import { Volume, Volume2 } from "lucide-react";
+import { Volume2 } from "lucide-react";
 
 interface Tutorial {
   id: number;
@@ -26,7 +25,6 @@ const TutorialDetailPage = ({ params }: { params: { id: string } }) => {
   const [tutorial, setTutorial] = useState<Tutorial | null>(null);
   const [loading, setLoading] = useState(true);
   const { user, fetchUser } = useUserStore();
-  const router = useRouter();
   const playerRef = useRef<ReactPlayer>(null);
   const [playing, setPlaying] = useState(false);
   const [volume, setVolume] = useState(0.8);
@@ -83,25 +81,17 @@ const TutorialDetailPage = ({ params }: { params: { id: string } }) => {
       </div>
     );
   }
-  <input
-    type="range"
-    min={0}
-    max={1}
-    step={0.1}
-    value={volume}
-    onChange={handleVolumeChange}
-    className="w-full"
-  />;
+
   return (
-    <div className="bg-[#212121] min-h-screen sm:ml-64 text-white p-8">
+    <div className="bg-[#212121]  min-h-screen sm:ml-64 text-white p-8">
       <div className="max-w-4xl mx-auto">
-        <h1 className="text-5xl font-bold mb-8 text-center bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-transparent bg-clip-text">
+        <h1 className="text-4xl md:text-5xl font-bold mb-8 text-center bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-transparent bg-clip-text leading-tight break-words">
           {tutorial.title}
         </h1>
 
         {tutorial.isPurchased ? (
           <>
-            <div className="mb-4 relative pt-[56.25%]  bg-gray-300 rounded-lg">
+            <div className="mb-6 relative pt-[56.25%] bg-gray-800 rounded-lg overflow-hidden shadow-2xl">
               <ReactPlayer
                 ref={playerRef}
                 url={tutorial.videoUrl}
@@ -109,7 +99,7 @@ const TutorialDetailPage = ({ params }: { params: { id: string } }) => {
                 controls
                 width="100%"
                 height="100%"
-                className="absolute top-0 left-0 w-full h-full rounded-lg shadow-lg"
+                className="absolute top-0 left-0 w-full h-full"
                 volume={volume}
                 playbackRate={playbackRate}
                 config={{
@@ -123,16 +113,16 @@ const TutorialDetailPage = ({ params }: { params: { id: string } }) => {
               />
             </div>
 
-            <div className="bg-[#212121] rounded-lg shadow-xl p-4 mb-8">
-              <div className="flex justify-between items-center mb-4">
-                <div className="flex items-center">
-                  {"Speed : "}
+            <div className="bg-gray-800 rounded-lg shadow-xl p-4 mb-8">
+              <div className="flex flex-wrap justify-between items-center mb-4 gap-2">
+                <div className="flex items-center space-x-2">
+                  <span className="text-sm">Speed:</span>
                   <select
                     value={playbackRate}
                     onChange={(e) =>
                       handlePlaybackRateChange(parseFloat(e.target.value))
                     }
-                    className="bg-[#212121] rounded p-1"
+                    className="bg-gray-800 rounded p-1 text-sm"
                   >
                     {[0.5, 0.75, 1, 1.25, 1.5, 2].map((rate) => (
                       <option key={rate} value={rate}>
@@ -141,21 +131,32 @@ const TutorialDetailPage = ({ params }: { params: { id: string } }) => {
                     ))}
                   </select>
                 </div>
-                <button onClick={() => handleSeek(-10)} className="text-2xl">
-                  <FaBackward />
-                </button>
-                <button onClick={handlePlayPause} className="text-2xl">
-                  {playing ? <FaPause /> : <FaPlay />}
-                </button>
-                <button onClick={() => handleSeek(10)} className="text-2xl">
-                  <FaForward />
-                </button>
-                <div className="flex items-center">
-                  <span className="mr-2">Quality:</span>
+                <div className="flex space-x-4">
+                  <button
+                    onClick={() => handleSeek(-10)}
+                    className="text-xl hover:text-purple-400 transition-colors"
+                  >
+                    <FaBackward />
+                  </button>
+                  <button
+                    onClick={handlePlayPause}
+                    className="text-xl hover:text-purple-400 transition-colors"
+                  >
+                    {playing ? <FaPause /> : <FaPlay />}
+                  </button>
+                  <button
+                    onClick={() => handleSeek(10)}
+                    className="text-xl hover:text-purple-400 transition-colors"
+                  >
+                    <FaForward />
+                  </button>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className="text-sm">Quality:</span>
                   <select
                     value={quality}
                     onChange={(e) => handleQualityChange(e.target.value)}
-                    className="bg-gray-700 rounded p-1"
+                    className="bg-[#16213e] rounded p-1 text-sm"
                   >
                     <option value="auto">Auto</option>
                     <option value="240p">240p</option>
@@ -166,8 +167,8 @@ const TutorialDetailPage = ({ params }: { params: { id: string } }) => {
                   </select>
                 </div>
               </div>
-              <div className="flex gap-4 items-center">
-                <Volume2 />
+              <div className="flex items-center space-x-2">
+                <Volume2 className="text-purple-400" />
                 <input
                   type="range"
                   min={0}
@@ -175,31 +176,33 @@ const TutorialDetailPage = ({ params }: { params: { id: string } }) => {
                   step={0.1}
                   value={volume}
                   onChange={handleVolumeChange}
-                  className="w-full"
+                  className="w-full accent-purple-500"
                 />
               </div>
             </div>
 
-            <div className="bg-[#212121] rounded-lg shadow-xl p-6 mb-8">
-              <h2 className="text-3xl font-semibold mb-4">Description</h2>
-              <p className="text-gray-300 leading-relaxed">
+            <div className="bg-gray-800 rounded-lg shadow-xl p-6 mb-8">
+              <h2 className="text-2xl font-semibold mb-4 text-purple-400">
+                Description
+              </h2>
+              <p className="text-gray-300 leading-relaxed break-words whitespace-pre-wrap">
                 {tutorial.description}
               </p>
             </div>
 
-            <div className="bg-[#212121] rounded-lg shadow-xl p-6">
-              <h2 className="text-3xl font-semibold mb-4">
+            <div className="bg-gray-800 rounded-lg shadow-xl p-6 mb-8">
+              <h2 className="text-2xl font-semibold mb-4 text-purple-400">
                 Additional Resources
               </h2>
               <ul className="space-y-2">
                 {tutorial.links.map((link) => (
                   <li key={link.id} className="flex items-center">
-                    <span className="mr-2">•</span>
+                    <span className="mr-2 text-purple-400">•</span>
                     <a
                       href={link.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-blue-400 hover:underline transition-colors duration-200"
+                      className="text-blue-400 hover:text-blue-300 transition-colors duration-200 break-all"
                     >
                       {link.title}
                     </a>
@@ -208,20 +211,22 @@ const TutorialDetailPage = ({ params }: { params: { id: string } }) => {
               </ul>
             </div>
 
-            <div className="bg-[#212121] rounded-lg shadow-xl p-6 mb-8 mt-10">
-              <div className="grid grid-cols-3 gap-4 text-center">
-                <div>
-                  <p className="text-lg font-semibold">{tutorial.authorName}</p>
+            <div className="bg-gray-800 rounded-lg shadow-xl p-6 mb-8">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                <div className="p-4 bg-[#16213e] rounded-lg">
+                  <p className="text-lg font-semibold text-purple-400">
+                    {tutorial.authorName}
+                  </p>
                   <p className="text-sm text-gray-400">Author</p>
                 </div>
-                <div>
-                  <p className="text-lg font-semibold">
+                <div className="p-4 bg-[#16213e] rounded-lg">
+                  <p className="text-lg font-semibold text-purple-400">
                     {new Date(tutorial.createdAt).toLocaleDateString()}
                   </p>
                   <p className="text-sm text-gray-400">Created</p>
                 </div>
-                <div>
-                  <p className="text-lg font-semibold">
+                <div className="p-4 bg-[#16213e] rounded-lg">
+                  <p className="text-lg font-semibold text-purple-400">
                     {new Date(tutorial.updatedAt).toLocaleDateString()}
                   </p>
                   <p className="text-sm text-gray-400">Last Updated</p>
@@ -230,7 +235,7 @@ const TutorialDetailPage = ({ params }: { params: { id: string } }) => {
             </div>
           </>
         ) : (
-          <div className="bg-gray-800 rounded-lg shadow-xl text-center p-8">
+          <div className="bg-[#0f3460] rounded-lg shadow-xl text-center p-8">
             <p className="mb-6 text-xl">
               You need to purchase this tutorial to view its content.
             </p>
