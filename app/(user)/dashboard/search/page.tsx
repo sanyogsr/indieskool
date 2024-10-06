@@ -134,7 +134,6 @@ import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
 import { useUserStore } from "@/store/userStore";
 import TutorialCard from "@/components/UserTutorialCard";
-import { useRouter } from "next/navigation";
 
 const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
@@ -155,21 +154,19 @@ interface Tutorial {
 const TutorialPage = () => {
   const [tutorials, setTutorials] = useState<Tutorial[]>([]);
   const [loading, setLoading] = useState(true);
-  const [userFetched, setUserFetched] = useState(false); // New state to ensure we refetch tutorials after user is fetched
+  const [userFetched, setUserFetched] = useState(false);
   const { user, fetchUser } = useUserStore();
-  const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
       await fetchUser();
-      setUserFetched(true); // Set this only after user is fetched
+      setUserFetched(true);
     };
 
     fetchData();
   }, [fetchUser]);
 
   useEffect(() => {
-    // Only fetch tutorials once user has been fetched
     if (userFetched && user && user.id) {
       const fetchTutorials = async () => {
         try {
@@ -185,10 +182,8 @@ const TutorialPage = () => {
       };
 
       fetchTutorials();
-    } else {
-      console.log("User not available yet");
     }
-  }, [user, userFetched]); // Ensure this runs after user is fetched
+  }, [user, userFetched]);
 
   const handleEnroll = async (tutorialId: number) => {
     if (!user || !user.id) {

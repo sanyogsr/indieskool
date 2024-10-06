@@ -1,9 +1,7 @@
-"use client";
-import React from "react";
-import { BookOpen, DollarSign, Clock } from "lucide-react";
+import React, { useState } from "react";
+import { BookOpen, DollarSign } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import Link from "next/link";
 
 interface TutorialCardProps {
   id: number;
@@ -28,6 +26,7 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
   difficulty = "Intermediate",
   onEnroll,
 }) => {
+  const [isNavigating, setIsNavigating] = useState(false); // New loading state for navigation
   const difficultyColor = {
     Beginner: "bg-green-500",
     Intermediate: "bg-yellow-500",
@@ -35,6 +34,11 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
   };
 
   const router = useRouter();
+
+  const handleNavigation = async () => {
+    setIsNavigating(true); // Set loading state before navigation
+    router.push(`/dashboard/courses/${id}`);
+  };
 
   return (
     <div className="bg-gray-900 rounded-lg overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105 transform">
@@ -82,28 +86,41 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
               {difficulty}
             </span>
           </div>
-
-          {/* Duration Section */}
         </div>
 
         {/* Enroll Button */}
         {isPurchased ? (
-          <Link
-            href={`/dashboard/courses/${id}`}
+          <button
+            onClick={handleNavigation}
             className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-2 px-4 rounded-full transition-colors duration-300 flex items-center justify-center"
           >
-            <BookOpen size={18} className="mr-2" />
-            Start Learning
-          </Link>
+            {isNavigating ? (
+              <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white"></div>
+            ) : (
+              <>
+                <BookOpen size={18} className="mr-2" />
+                Start Learning
+              </>
+            )}
+          </button>
         ) : (
-          <Link
-            href="#"
-            onClick={() => onEnroll && onEnroll(id)}
+          <button
+            onClick={async () => {
+              setIsNavigating(true);
+              if (onEnroll) await onEnroll(id);
+              setIsNavigating(false);
+            }}
             className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-bold py-2 px-4 rounded-full transition-colors duration-300 flex items-center justify-center"
           >
-            <BookOpen size={18} className="mr-2" />
-            Enroll Now
-          </Link>
+            {isNavigating ? (
+              <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white"></div>
+            ) : (
+              <>
+                <BookOpen size={18} className="mr-2" />
+                Enroll Now
+              </>
+            )}
+          </button>
         )}
       </div>
     </div>
