@@ -11,7 +11,6 @@ interface TutorialCardProps {
   price: number;
   isPurchased: boolean;
   thumbnail?: string;
-  duration?: string;
   rating?: number;
   difficulty?: "Beginner" | "Intermediate" | "Advanced";
   onEnroll?: (id: number) => Promise<void>;
@@ -24,7 +23,6 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
   price,
   isPurchased,
   thumbnail,
-  duration = "2h 30m",
   rating = 4.5,
   difficulty = "Intermediate",
   onEnroll,
@@ -78,17 +76,13 @@ const TutorialCard: React.FC<TutorialCardProps> = ({
               </span>
             )}
             <span
-              className={`text-xs text-white px-2 py-1 rounded-full ${difficultyColor[difficulty]}`}
+              className={`text-xs text-gray-900 px-2 py-1 rounded-full ${difficultyColor[difficulty]}`}
             >
               {difficulty}
             </span>
           </div>
 
           {/* Duration Section */}
-          <div className="flex items-center text-gray-400">
-            <Clock size={14} className="mr-1" />
-            <span className="text-sm">{duration}</span>
-          </div>
         </div>
 
         {/* Enroll Button */}
