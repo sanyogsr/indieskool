@@ -4,7 +4,8 @@ import Toast from "@/components/Toast";
 import { useCustomSession } from "@/hooks/session";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import Image from "next/image";
 
 export default function Login() {
   const [email, setEmail] = useState<string>(""); // Avoid null
@@ -41,6 +42,23 @@ export default function Login() {
     }
   }
 
+  async function signInWithGoogle() {
+    try {
+      setLoading(true); // Start loading
+      const result = await signIn("google", {
+        callbackUrl: `${window.location.origin}/role`, // Set callback URL
+      });
+
+      // if (!result || result.error) {
+      //   alert("Google sign-in failed. Please try again.");
+      // }
+      setLoading(false); // Stop loading
+    } catch (err) {
+      setLoading(false);
+      alert(`An error occurred: ${err}`);
+    }
+  }
+
   // Show loading state while session check is happening
   if (sessionLoading) {
     return (
@@ -63,8 +81,8 @@ export default function Login() {
       </Link>
       <div className="flex-grow flex items-center justify-center">
         <div className="relative flex flex-col items-center justify-center bg-gradient-to-r from-yellow-400 to-orange-500 w-full max-w-sm mx-4 sm:mx-6 md:mx-8 lg:mx-10 h-[400px] md:h-[350px] sm:h-[350px] border border-white rounded-xl p-6">
-          <div className="absolute top-6 bg-[#212121] p-2 rounded-lg">
-            <h1 className="text-xl md:text-2xl font-bold text-white">Login</h1>
+          <div className="absolute  top-3 bg-[#212121] p-2 rounded-lg">
+            <h1 className="text-xl md:text-2xl  font-bold text-white">Login</h1>
           </div>
           <form onSubmit={signInWithEmail} className="w-full">
             <input
@@ -78,12 +96,33 @@ export default function Login() {
             />
             <button
               type="submit"
-              className="flex justify-center items-center w-full h-12 md:h-14 rounded-lg outline-none text-white text-lg md:text-xl bg-[#212121] cursor-pointer active:bg-[#ffffff]/60 active:text-[#212121]"
+              className="flex mb-4 justify-center items-center w-full h-12 md:h-14 rounded-lg outline-none text-white text-lg md:text-xl bg-[#212121] cursor-pointer active:bg-[#ffffff]/60 active:text-[#212121]"
               disabled={loading} // Disable button when loading
             >
               {loading ? <Loading /> : "Send magic link"}
             </button>
           </form>
+          <p className="text-xl font-semibold">or</p>
+          <button
+            onClick={signInWithGoogle}
+            className="flex items-center mt-4 justify-center w-full h-12 md:h-14 mb-4 rounded-lg bg-white shadow-md hover:bg-gray-100 transition-colors duration-300"
+            disabled={loading}
+          >
+            {loading ? (
+              <Loading />
+            ) : (
+              <>
+                <Image
+                  src="https://developers.google.com/identity/images/g-logo.png"
+                  alt="Google logo"
+                  width={24}
+                  height={24}
+                  className="mr-2"
+                />
+                <span className="text-gray-700">Sign in with Google</span>
+              </>
+            )}
+          </button>
         </div>
       </div>
       {showToast && (

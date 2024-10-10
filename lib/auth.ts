@@ -1,4 +1,6 @@
 import { NextAuthOptions } from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
+
 import EmailProvider from "next-auth/providers/email";
 
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
@@ -44,5 +46,13 @@ export const authOptions: NextAuthOptions = {
       },
       from: process.env.EMAIL_FROM,
     }),
+    GoogleProvider({
+      clientId: process.env.GOOGLE_CLIENT_ID || "",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+    }),
   ],
+  pages: {
+    signIn: "/login",
+    error: "/login", // Redirect to login page on error
+  },
 };

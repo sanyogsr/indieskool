@@ -4,6 +4,7 @@ const nextConfig = {
 
   images: {
     domains: ["images.unsplash.com"],
+    domains: ["developers.google.com"],
   },
   typescript: {
     // This tells Next.js to ignore any TypeScript errors during the build.
